@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtocolCreator", "ProtocolCreator\ProtocolCreator.csproj", "{4A7A4745-33C4-4546-9095-A8E723E4722C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A7A4745-33C4-4546-9095-A8E723E4722C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A7A4745-33C4-4546-9095-A8E723E4722C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A7A4745-33C4-4546-9095-A8E723E4722C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A7A4745-33C4-4546-9095-A8E723E4722C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3B26787E-8872-4821-8A0F-B23511F26A22}
+	EndGlobalSection
+EndGlobal
