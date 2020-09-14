@@ -95,6 +95,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProtocolElementModel.cs" />
+    <Compile Include="ProtocolFullModel.cs" />
     <EmbeddedResource Include="BufferWindow.resx">
       <DependentUpon>BufferWindow.cs</DependentUpon>
     </EmbeddedResource>
@@ -120,7 +121,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="ProtocolCreator_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

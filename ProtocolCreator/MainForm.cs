@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -12,14 +12,13 @@ namespace ProtocolCreator
 {
     public partial class MainForm : Form
     {
-        #region Fields
-
-        ObservableCollection<ProtocolElementModel> protocolElements;
-        string fileName = "новый протокол";
-
+        #region fields
+        private ObservableCollection<ProtocolElementModel> protocolElements;
+        private string fileName = "новый протокол";
+        private readonly string TemplateProtocol;
         #endregion
 
-        #region Ctor
+        #region ctor
 
         public MainForm()
         {
@@ -28,16 +27,25 @@ namespace ProtocolCreator
             protocolElements.CollectionChanged += ElemenetsCollectionChanged;
             this.Text = "Creator - " + fileName;
             saveToFileButton.ToolTipText = "Нельзя сохранять пустой файл.";
-            //FillTemp();
+            TemplateProtocol = CreateTemplate();
         }
 
-        private void FillTemp()
+        #endregion Ctor
+
+        #region Template creation
+        private string CreateTemplate()
         {
-            protocolElements.Add(new ProtocolElementModel { ID = "One", Name = "First", Value = "FirstOne" });
-            protocolElements.Add(new ProtocolElementModel { ID = "Two", Name = "Second", Value = "TwoSecond" });
+            StringBuilder template = new StringBuilder();
+            using (StreamReader reader = new StreamReader(Environment.CurrentDirectory + "\\Templates\\ProtocolTemplate.txt"))
+            {
+                while (!reader.EndOfStream)
+                {
+                    template.Append(reader.ReadLine() + Environment.NewLine);
+                }
+            }
+            return template.ToString().Remove(template.ToString().LastIndexOf(Environment.NewLine));
         }
-
-        #endregion
+        #endregion Template creation
 
         #region buttons
 
@@ -71,8 +79,7 @@ namespace ProtocolCreator
 
         #endregion
 
-        #region CollectionEvents
-
+        #region collection events
         private void ElemenetsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -160,37 +167,41 @@ namespace ProtocolCreator
         #endregion
 
         #region create
-
         private void CreateButton_Click(object sender, EventArgs e)
         {
-            BufferWindow buffer = new BufferWindow(OnCreate());
+            BufferWindow buffer = new BufferWindow(OnCreate(), IDprotocolTextBox.Text);
             buffer.ShowDialog();
         }
-
         private string OnCreate()
         {
-            string result = string.Empty;
+            StringBuilder result = new StringBuilder();
+            //header
+            result.Append(TemplateProtocol);
+            result.Replace("TMP_ID_REPLACE", IDprotocolTextBox.Text);
+            result.Replace("TMP_NAME_REPLACE", nameProtocolTextBox.Text);
+            result.Replace("TMP_HEADER_VALUE_REPLACE", headerProtocolTextBox.Text);
+            //body
+            StringBuilder body = new StringBuilder();
             foreach (ProtocolElementModel item in protocolElements)
             {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("  <TextBox ");
-                sb.Append($"Id=\"{item.ID}\" ");
+                body.Append("  <TextBox ");
+                body.Append($"Id=\"{item.ID}\" ");
                 string nameText = string.IsNullOrEmpty(item.Name) ? string.Empty : $"Name=\"{item.Name}\" ";
-                sb.Append(nameText);
-                sb.Append("ItemType=\"TextBox\" IsEnabled=\"true\" IsVisible=\"true\" ");
-                sb.Append($"Value=\"{item.Value}\" MinWidth=\"60\" Lines=\"2\" />");
-                result += sb.ToString();
-                result += Environment.NewLine;
+                body.Append(nameText);
+                body.Append("ItemType=\"TextBox\" IsEnabled=\"true\" IsVisible=\"true\" ");
+                body.Append($"Value=\"{item.Value}\" MinWidth=\"60\" Lines=\"2\" />");
+                body.Append(Environment.NewLine);
             }
-            return result;
+            result.Replace("TMP_BODY_REPLACE", body.ToString().Remove(body.ToString().LastIndexOf(Environment.NewLine)));
+            //footer
+            result.Replace("TMP_CONCLUSION_REPLACE", conclusionTextBox.Text);
+            return result.ToString();
         }
-
-
         #endregion
 
         #region menu buttons
 
-        private void newFileButton_Click(object sender, EventArgs e)
+        private void NewFileButton_Click(object sender, EventArgs e)
         {
             if (protocolElements.Count != 0)
             {
@@ -200,7 +211,7 @@ namespace ProtocolCreator
             protocolElements.Clear();
         }
 
-        private void openFromFileButton_Click(object sender, EventArgs e)
+        private void OpenFromFileButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFile = new OpenFileDialog();
             openFile.Filter = "JSon протокол (*.json) | *.json";
@@ -220,23 +231,37 @@ namespace ProtocolCreator
                    .Remove(0, openFile.FileName.LastIndexOf('\\') + 1)
                    .Replace(".json", string.Empty);
             this.Text = "Creator - " + fileName;
-            ProtocolElementModel[] models = JsonConvert.DeserializeObject<ProtocolElementModel[]>(buffer);
+
             if (protocolElements.Count != 0)
             {
                 if (MessageBox.Show("Текущий протокол будет удален, сохранить перед закрытием?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     saveToFileButton.PerformClick();
             }
+            ProtocolFullModel protocol = JsonConvert.DeserializeObject<ProtocolFullModel>(buffer);
+
+            IDprotocolTextBox.Text = protocol.ID;
+            nameProtocolTextBox.Text = protocol.Name;
+            headerProtocolTextBox.Text = protocol.ProtocolHeader;
+            conclusionTextBox.Text = protocol.Conclusion;
+
             protocolElements.Clear();
-            foreach (ProtocolElementModel item in models)
+            foreach (ProtocolElementModel item in protocol.Elements)
             {
                 protocolElements.Add(item);
             }
         }
 
-        private void saveToFileButton_Click(object sender, EventArgs e)
+        private void SaveToFileButton_Click(object sender, EventArgs e)
         {
-            string jsonFile = JsonConvert.SerializeObject(protocolElements, Formatting.Indented);
-
+            ProtocolFullModel protocol = new ProtocolFullModel
+            {
+                ID = IDprotocolTextBox.Text,
+                Name = nameProtocolTextBox.Text,
+                ProtocolHeader = headerProtocolTextBox.Text,
+                Conclusion = conclusionTextBox.Text,
+                Elements = protocolElements.ToList()
+            };
+            string jsonFile = JsonConvert.SerializeObject(protocol, Formatting.Indented);
             SaveFileDialog saveFile = new SaveFileDialog();
             saveFile.Filter = "JSon протокол (*.json) | *.json";
             saveFile.Title = "Сохранение протокола";
