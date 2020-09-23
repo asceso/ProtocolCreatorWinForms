@@ -1,4 +1,7 @@
 ﻿using Newtonsoft.Json;
+using ProtocolCreator.Models;
+using ProtocolCreator.Properties;
+using ProtocolCreator.Translate;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -6,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProtocolCreator
@@ -13,13 +17,12 @@ namespace ProtocolCreator
     public partial class MainForm : Form
     {
         #region fields
-        private ObservableCollection<ProtocolElementModel> protocolElements;
+        private readonly ObservableCollection<ProtocolElementModel> protocolElements;
         private string fileName = "новый протокол";
         private readonly string TemplateProtocol;
         #endregion
 
         #region ctor
-
         public MainForm()
         {
             InitializeComponent();
@@ -29,7 +32,6 @@ namespace ProtocolCreator
             saveToFileButton.ToolTipText = "Нельзя сохранять пустой файл.";
             TemplateProtocol = CreateTemplate();
         }
-
         #endregion Ctor
 
         #region Template creation
@@ -48,11 +50,18 @@ namespace ProtocolCreator
         #endregion Template creation
 
         #region buttons
-
         private void SaveButton_Click(object sender, EventArgs e) => OnSave();
         private void AddButton_Click(object sender, EventArgs e) => OnAdd();
         private void DeleteButton_Click(object sender, EventArgs e) => OnDelete();
-
+        private async void TranslateIDTextBox_Click(object sender, EventArgs e)
+        {
+            translateIDTextBox.Image = Resources.loading;
+            string translated = string.Empty;
+            await Task.Run(()=> translated = TextTranslator.TranslateToEng(idTextBox.Text) );
+            idTextBox.Text = translated;
+            idTextBox.DeselectAll();
+            translateIDTextBox.Image = Resources.translate;
+        }
         #endregion
 
         #region buttons Methods
@@ -61,22 +70,21 @@ namespace ProtocolCreator
             ProtocolElementModel model = new ProtocolElementModel();
             protocolElements.Add(model);
         }
-
         private void OnDelete()
         {
             protocolElements.Remove(protocolElements[protocolList.SelectedIndex]);
         }
-
         private void OnSave()
         {
             saveButton.Enabled = false;
-            ProtocolElementModel newModel = new ProtocolElementModel();
-            newModel.ID = idTextBox.Text;
-            newModel.Name = nameTextBox.Text;
-            newModel.Value = valueTextBox.Text;
+            ProtocolElementModel newModel = new ProtocolElementModel
+            {
+                ID = idTextBox.Text,
+                Name = nameTextBox.Text,
+                Value = valueTextBox.Text
+            };
             protocolElements[protocolList.SelectedIndex] = newModel;
         }
-
         #endregion
 
         #region collection events
@@ -87,14 +95,17 @@ namespace ProtocolCreator
                 case NotifyCollectionChangedAction.Add:
                     {
                         ProtocolElementModel protocol = e.NewItems[0] as ProtocolElementModel;
-                        protocolList.Items.Add(protocol.ID);
-                        protocolList.SelectedIndex = protocolList.Items.Count - 1;
-                        
-                        idTextBox.Text = protocol.ID;
-                        nameTextBox.Text = protocol.Name;
-                        valueTextBox.Text = protocol.Value;
+                        if (InvokeRequired)
+                        {
+                            Invoke(new Action(() => OnAddElement(protocol)));
+                            return;
+                        }
+                        else
+                        {
+                            OnAddElement(protocol);
+                            return;
+                        }
                     }
-                    break;
                 case NotifyCollectionChangedAction.Remove:
                     {
                         protocolList.Items.RemoveAt(protocolList.SelectedIndex);
@@ -120,15 +131,26 @@ namespace ProtocolCreator
                     }
                     break;
             }
-            createButton.Enabled = protocolList.Items.Count == 0 ? false : true;
-            saveToFileButton.Enabled = protocolList.Items.Count == 0 ? false : true;
+            createButton.Enabled = protocolList.Items.Count != 0;
+            saveToFileButton.Enabled = protocolList.Items.Count != 0;
             saveToFileButton.ToolTipText = !saveToFileButton.Enabled ? "Нельзя сохранять пустой файл." : string.Empty;
         }
+        private void OnAddElement(ProtocolElementModel protocol)
+        {
+            protocolList.Items.Add(protocol.ID);
+            protocolList.SelectedIndex = protocolList.Items.Count - 1;
 
+            idTextBox.Text = protocol.ID;
+            nameTextBox.Text = protocol.Name;
+            valueTextBox.Text = protocol.Value;
+
+            createButton.Enabled = protocolList.Items.Count != 0;
+            saveToFileButton.Enabled = protocolList.Items.Count != 0;
+            saveToFileButton.ToolTipText = !saveToFileButton.Enabled ? "Нельзя сохранять пустой файл." : string.Empty;
+        }
         #endregion
 
         #region listbox events
-
         private void ProtocolList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (protocolList.SelectedIndex == -1)
@@ -143,15 +165,13 @@ namespace ProtocolCreator
                 nameTextBox.Text = protocolElements[protocolList.SelectedIndex].Name;
                 valueTextBox.Text = protocolElements[protocolList.SelectedIndex].Value;
             }
-            deleteButton.Enabled = protocolList.SelectedIndex == -1 ? false : true;
+            deleteButton.Enabled = protocolList.SelectedIndex != -1;
         }
-
         private void ProtocolList_MouseClick(object sender, MouseEventArgs e)
         {
             int index = protocolList.IndexFromPoint(new Point(e.X, e.Y));
             protocolList.SelectedIndex = index;
         }
-
         private void Item_TextChanged(object sender, EventArgs e)
         {
             if (protocolList.SelectedIndex != -1)
@@ -159,17 +179,34 @@ namespace ProtocolCreator
                     idTextBox.Text != protocolElements[protocolList.SelectedIndex].ID ||
                     nameTextBox.Text != protocolElements[protocolList.SelectedIndex].Name ||
                     valueTextBox.Text != protocolElements[protocolList.SelectedIndex].Value
-                    ) ? true : false;
+                    );
             else
                 saveButton.Enabled = false;
-        }
+            while (valueTextBox.Text.Contains("\""))
+            {
+                valueTextBox.Text = valueTextBox.Text.Replace("\"", "'");
+            }
+            while (valueTextBox.Text.Contains(">"))
+            {
+                valueTextBox.Text = valueTextBox.Text.Replace(">", "&#707;");
+            }
+            while (valueTextBox.Text.Contains("<"))
+            {
+                valueTextBox.Text = valueTextBox.Text.Replace("<", "&#706;");
+            }
 
+        }
         #endregion
 
         #region create
         private void CreateButton_Click(object sender, EventArgs e)
         {
-            BufferWindow buffer = new BufferWindow(OnCreate(), IDprotocolTextBox.Text);
+            StringBuilder idCollection = new StringBuilder();
+            foreach (var item in protocolElements)
+            {
+                idCollection.Append(item.ID + Environment.NewLine);
+            }
+            BufferWindow buffer = new BufferWindow(OnCreate(), IDprotocolTextBox.Text, idCollection.ToString());
             buffer.ShowDialog();
         }
         private string OnCreate()
@@ -200,7 +237,6 @@ namespace ProtocolCreator
         #endregion
 
         #region menu buttons
-
         private void NewFileButton_Click(object sender, EventArgs e)
         {
             if (protocolElements.Count != 0)
@@ -209,14 +245,19 @@ namespace ProtocolCreator
                     saveToFileButton.PerformClick();
             }
             protocolElements.Clear();
+            IDprotocolTextBox.Clear();
+            nameProtocolTextBox.Clear();
+            headerProtocolTextBox.Clear();
+            conclusionTextBox.Clear();
         }
-
         private void OpenFromFileButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFile = new OpenFileDialog();
-            openFile.Filter = "JSon протокол (*.json) | *.json";
-            openFile.Title = "Открыть протокол";
-            openFile.InitialDirectory = Environment.CurrentDirectory;
+            OpenFileDialog openFile = new OpenFileDialog
+            {
+                Filter = "JSon протокол (*.json) | *.json",
+                Title = "Открыть протокол",
+                InitialDirectory = Environment.CurrentDirectory
+            };
             string buffer = string.Empty;
             if (openFile.ShowDialog() == DialogResult.OK)
             {
@@ -250,7 +291,6 @@ namespace ProtocolCreator
                 protocolElements.Add(item);
             }
         }
-
         private void SaveToFileButton_Click(object sender, EventArgs e)
         {
             ProtocolFullModel protocol = new ProtocolFullModel
@@ -261,11 +301,13 @@ namespace ProtocolCreator
                 Conclusion = conclusionTextBox.Text,
                 Elements = protocolElements.ToList()
             };
-            string jsonFile = JsonConvert.SerializeObject(protocol, Formatting.Indented);
-            SaveFileDialog saveFile = new SaveFileDialog();
-            saveFile.Filter = "JSon протокол (*.json) | *.json";
-            saveFile.Title = "Сохранение протокола";
-            saveFile.InitialDirectory = Environment.CurrentDirectory;
+            string jsonFile = JsonConvert.SerializeObject(protocol, Newtonsoft.Json.Formatting.Indented);
+            SaveFileDialog saveFile = new SaveFileDialog
+            {
+                Filter = "JSon протокол (*.json) | *.json",
+                Title = "Сохранение протокола",
+                InitialDirectory = Environment.CurrentDirectory
+            };
             if (saveFile.ShowDialog() == DialogResult.OK)
             {
                 using (StreamWriter writer = new StreamWriter(saveFile.FileName))
@@ -281,7 +323,60 @@ namespace ProtocolCreator
             this.Text = "Creator - " + fileName;
             MessageBox.Show("Сохранение файла прошло успешно", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+        private async void ImportElementsBtn_Click(object sender, EventArgs e)
+        {
+            ImportForm import = new ImportForm();
+            import.ShowDialog();
+            if (string.IsNullOrEmpty(import.ImportBuffer))
+                return;
+            LoadingPictureBox.Visible = true;
+            LoadingPictureBox.BringToFront();
+            await Task.Run(() => OnImport(import));
+            LoadingPictureBox.SendToBack();
+            LoadingPictureBox.Visible = false;
+        }
+        private void OnImport(ImportForm import)
+        {
+            string[] bufferToImport = import.ImportBuffer.Split('\n');
+            foreach (string item in bufferToImport)
+            {
+                if (item.Equals(string.Empty))
+                    continue;
+                string[] words = item.Split(' ');
+                string tmpID = string.Empty;
+                if (words.Length < 5)
+                    tmpID = "DefaultID";
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (words[i].Any(char.IsPunctuation))
+                            continue;
+                        tmpID += words[i] + " ";
+                    }
+                    tmpID = TextTranslator.TranslateToEng(tmpID);
+                }
+                protocolElements.Add(new ProtocolElementModel
+                {
+                    ID = tmpID,
+                    Value = item.Replace("\r", string.Empty)
+                });
+            }
+        }
+        #endregion
 
+        #region copy buttons
+        private void CopyIDBtn_Click(object sender, EventArgs e) =>
+            Clipboard.SetText(IDprotocolTextBox.Text.Equals(string.Empty) ? "default.protocol.ID" : IDprotocolTextBox.Text);
+        private void CopyNameBtn_Click(object sender, EventArgs e) =>
+            Clipboard.SetText(nameProtocolTextBox.Text.Equals(string.Empty) ? "default.protocol.Name" : nameProtocolTextBox.Text);
+        private void CopyHeaderBtn_Click(object sender, EventArgs e) => Clipboard.SetText("ProtocolName");
+        private void CopyConclusionBtn_Click(object sender, EventArgs e) => Clipboard.SetText("Conclusion");
+        private void CopyItemIDBtn_Click(object sender, EventArgs e)
+        {
+            if (!idTextBox.Text.Equals(string.Empty))
+                Clipboard.SetText(idTextBox.Text);
+        }
         #endregion
     }
 }

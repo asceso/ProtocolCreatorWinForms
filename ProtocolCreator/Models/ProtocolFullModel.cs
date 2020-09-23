@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ProtocolCreator
+namespace ProtocolCreator.Models
 {
     class ProtocolFullModel
     {

@@ -6,33 +6,36 @@ namespace ProtocolCreator
 {
     public partial class BufferWindow : Form
     {
-        private string id;
-        public BufferWindow(string buffer, string id)
+        private readonly string id;
+        public BufferWindow(string buffer, string id, string idCollection)
         {
             InitializeComponent();
             bufferTextBox.Text = buffer;
+            idCollectionTextBox.Text = idCollection;
             this.id = id;
         }
         private void CopyButton_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(bufferTextBox.Text);
+            Clipboard.SetText(idCollectionTextBox.Text);
         }
         private void ExportButton_Click(object sender, EventArgs e)
         {
-            SaveFileDialog saveFile = new SaveFileDialog();
-            saveFile.Filter = "Протокол (*.txt) | *.txt";
-            saveFile.Title = "Экспорт протокола";
-            saveFile.FileName = id;
-            saveFile.InitialDirectory = Environment.CurrentDirectory;
-            if (saveFile.ShowDialog() == DialogResult.OK)
+            FolderBrowserDialog folder = new FolderBrowserDialog
             {
-                using (StreamWriter writer = new StreamWriter(saveFile.FileName))
-                {
-                    writer.Write(bufferTextBox.Text);
-                }
+                SelectedPath = $"C:\\Users\\{Environment.UserName}\\Documents\\",
+                Description = "Выбор папки для сохранения"
+            };
+            string currentPath;
+            if (DialogResult.OK == folder.ShowDialog())
+            {
+                currentPath = folder.SelectedPath;
             }
             else
                 return;
+            using (StreamWriter writer = new StreamWriter(currentPath + "\\" + id + ".txt"))
+            {
+                writer.Write(bufferTextBox.Text);
+            }
         }
     }
 }
