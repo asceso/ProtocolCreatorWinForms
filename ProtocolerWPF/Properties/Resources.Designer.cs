@@ -59,5 +59,23 @@ namespace ProtocolerWPF.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на /ProtocolerWPF;component/Media/paint-dark.png.
+        /// </summary>
+        internal static string DarkThemeIconPath {
+            get {
+                return ResourceManager.GetString("DarkThemeIconPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на /ProtocolerWPF;component/Media/paint-light.png.
+        /// </summary>
+        internal static string LightThemeIconPath {
+            get {
+                return ResourceManager.GetString("LightThemeIconPath", resourceCulture);
+            }
+        }
     }
 }
