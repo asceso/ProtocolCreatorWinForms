@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.createButton = new System.Windows.Forms.Button();
             this.listPanel = new System.Windows.Forms.Panel();
-            this.LoadingPictureBox = new System.Windows.Forms.PictureBox();
             this.conclusionTextBox = new System.Windows.Forms.TextBox();
             this.stack4 = new System.Windows.Forms.Panel();
             this.copyConclusionBtn = new System.Windows.Forms.PictureBox();
@@ -49,9 +49,14 @@
             this.copyIDBtn = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.protocolList = new System.Windows.Forms.ListBox();
+            this.elementsMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteContextMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteAllContext = new System.Windows.Forms.ToolStripMenuItem();
+            this.mergeAllBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.listButtonsPanel = new System.Windows.Forms.Panel();
             this.deleteButton = new System.Windows.Forms.Button();
             this.addButton = new System.Windows.Forms.Button();
+            this.LoadingPictureBox = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.idTextBox = new System.Windows.Forms.TextBox();
             this.valueTextBox = new System.Windows.Forms.TextBox();
@@ -66,10 +71,15 @@
             this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.newFileButton = new System.Windows.Forms.ToolStripMenuItem();
             this.openFromFileButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFromTxtBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToFileButton = new System.Windows.Forms.ToolStripMenuItem();
             this.importElementsBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.importTxtBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultFolderBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.mergeIfDropChk = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportTxtButton = new System.Windows.Forms.Button();
+            this.importTranslateCheck = new System.Windows.Forms.ToolStripMenuItem();
             this.listPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.LoadingPictureBox)).BeginInit();
             this.stack4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.copyConclusionBtn)).BeginInit();
             this.stack3.SuspendLayout();
@@ -78,7 +88,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.copyNameBtn)).BeginInit();
             this.stack1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.copyIDBtn)).BeginInit();
+            this.elementsMenu.SuspendLayout();
             this.listButtonsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.LoadingPictureBox)).BeginInit();
             this.itemPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.translateIDTextBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.copyItemIDButton)).BeginInit();
@@ -115,18 +127,6 @@
             this.listPanel.Name = "listPanel";
             this.listPanel.Size = new System.Drawing.Size(381, 447);
             this.listPanel.TabIndex = 9;
-            // 
-            // LoadingPictureBox
-            // 
-            this.LoadingPictureBox.BackColor = System.Drawing.Color.Transparent;
-            this.LoadingPictureBox.Image = global::ProtocolCreator.Properties.Resources.LoadingTransparent;
-            this.LoadingPictureBox.Location = new System.Drawing.Point(0, 28);
-            this.LoadingPictureBox.Name = "LoadingPictureBox";
-            this.LoadingPictureBox.Size = new System.Drawing.Size(381, 134);
-            this.LoadingPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.LoadingPictureBox.TabIndex = 12;
-            this.LoadingPictureBox.TabStop = false;
-            this.LoadingPictureBox.Visible = false;
             // 
             // conclusionTextBox
             // 
@@ -291,6 +291,8 @@
             // 
             // protocolList
             // 
+            this.protocolList.AllowDrop = true;
+            this.protocolList.ContextMenuStrip = this.elementsMenu;
             this.protocolList.Dock = System.Windows.Forms.DockStyle.Top;
             this.protocolList.FormattingEnabled = true;
             this.protocolList.Location = new System.Drawing.Point(0, 28);
@@ -299,6 +301,42 @@
             this.protocolList.TabIndex = 1;
             this.protocolList.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ProtocolList_MouseClick);
             this.protocolList.SelectedIndexChanged += new System.EventHandler(this.ProtocolList_SelectedIndexChanged);
+            this.protocolList.DragDrop += new System.Windows.Forms.DragEventHandler(this.ProtocolList_DragDrop);
+            this.protocolList.DragEnter += new System.Windows.Forms.DragEventHandler(this.ProtocolList_DragEnter);
+            this.protocolList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ProtocolList_KeyDown);
+            // 
+            // elementsMenu
+            // 
+            this.elementsMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteContextMenu,
+            this.deleteAllContext,
+            this.mergeAllBtn});
+            this.elementsMenu.Name = "elementsMenu";
+            this.elementsMenu.Size = new System.Drawing.Size(163, 70);
+            // 
+            // deleteContextMenu
+            // 
+            this.deleteContextMenu.Enabled = false;
+            this.deleteContextMenu.Name = "deleteContextMenu";
+            this.deleteContextMenu.Size = new System.Drawing.Size(162, 22);
+            this.deleteContextMenu.Text = "Удалить";
+            this.deleteContextMenu.Click += new System.EventHandler(this.DeleteContextMenu_Click);
+            // 
+            // deleteAllContext
+            // 
+            this.deleteAllContext.Enabled = false;
+            this.deleteAllContext.Name = "deleteAllContext";
+            this.deleteAllContext.Size = new System.Drawing.Size(162, 22);
+            this.deleteAllContext.Text = "Удалить все";
+            this.deleteAllContext.Click += new System.EventHandler(this.DeleteAllContext_Click);
+            // 
+            // mergeAllBtn
+            // 
+            this.mergeAllBtn.Enabled = false;
+            this.mergeAllBtn.Name = "mergeAllBtn";
+            this.mergeAllBtn.Size = new System.Drawing.Size(162, 22);
+            this.mergeAllBtn.Text = "Объединить все";
+            this.mergeAllBtn.Click += new System.EventHandler(this.MergeAllBtn_Click);
             // 
             // listButtonsPanel
             // 
@@ -332,6 +370,18 @@
             this.addButton.Text = "Добавить";
             this.addButton.UseVisualStyleBackColor = true;
             this.addButton.Click += new System.EventHandler(this.AddButton_Click);
+            // 
+            // LoadingPictureBox
+            // 
+            this.LoadingPictureBox.BackColor = System.Drawing.Color.Transparent;
+            this.LoadingPictureBox.Image = global::ProtocolCreator.Properties.Resources.LoadingTransparent;
+            this.LoadingPictureBox.Location = new System.Drawing.Point(0, 28);
+            this.LoadingPictureBox.Name = "LoadingPictureBox";
+            this.LoadingPictureBox.Size = new System.Drawing.Size(381, 134);
+            this.LoadingPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.LoadingPictureBox.TabIndex = 12;
+            this.LoadingPictureBox.TabStop = false;
+            this.LoadingPictureBox.Visible = false;
             // 
             // label3
             // 
@@ -403,10 +453,10 @@
             this.itemPanel.Controls.Add(this.valueTextBox);
             this.itemPanel.Controls.Add(this.idTextBox);
             this.itemPanel.Controls.Add(this.label3);
-            this.itemPanel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.itemPanel.Location = new System.Drawing.Point(387, 24);
+            this.itemPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.itemPanel.Location = new System.Drawing.Point(381, 24);
             this.itemPanel.Name = "itemPanel";
-            this.itemPanel.Size = new System.Drawing.Size(592, 419);
+            this.itemPanel.Size = new System.Drawing.Size(598, 385);
             this.itemPanel.TabIndex = 10;
             // 
             // translateIDTextBox
@@ -435,9 +485,9 @@
             // 
             this.saveButton.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.saveButton.Enabled = false;
-            this.saveButton.Location = new System.Drawing.Point(0, 391);
+            this.saveButton.Location = new System.Drawing.Point(0, 357);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(592, 28);
+            this.saveButton.Size = new System.Drawing.Size(598, 28);
             this.saveButton.TabIndex = 3;
             this.saveButton.Text = "Сохранить";
             this.saveButton.UseVisualStyleBackColor = true;
@@ -447,7 +497,11 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenu,
-            this.importElementsBtn});
+            this.importElementsBtn,
+            this.importTxtBtn,
+            this.defaultFolderBtn,
+            this.mergeIfDropChk,
+            this.importTranslateCheck});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(979, 24);
@@ -459,6 +513,7 @@
             this.fileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newFileButton,
             this.openFromFileButton,
+            this.openFromTxtBtn,
             this.saveToFileButton});
             this.fileMenu.Name = "fileMenu";
             this.fileMenu.Size = new System.Drawing.Size(48, 20);
@@ -467,22 +522,29 @@
             // newFileButton
             // 
             this.newFileButton.Name = "newFileButton";
-            this.newFileButton.Size = new System.Drawing.Size(133, 22);
+            this.newFileButton.Size = new System.Drawing.Size(138, 22);
             this.newFileButton.Text = "Новый";
             this.newFileButton.Click += new System.EventHandler(this.NewFileButton_Click);
             // 
             // openFromFileButton
             // 
             this.openFromFileButton.Name = "openFromFileButton";
-            this.openFromFileButton.Size = new System.Drawing.Size(133, 22);
+            this.openFromFileButton.Size = new System.Drawing.Size(138, 22);
             this.openFromFileButton.Text = "Открыть";
             this.openFromFileButton.Click += new System.EventHandler(this.OpenFromFileButton_Click);
+            // 
+            // openFromTxtBtn
+            // 
+            this.openFromTxtBtn.Name = "openFromTxtBtn";
+            this.openFromTxtBtn.Size = new System.Drawing.Size(138, 22);
+            this.openFromTxtBtn.Text = "Открыть txt";
+            this.openFromTxtBtn.Click += new System.EventHandler(this.OpenFromTxtBtn_Click);
             // 
             // saveToFileButton
             // 
             this.saveToFileButton.Enabled = false;
             this.saveToFileButton.Name = "saveToFileButton";
-            this.saveToFileButton.Size = new System.Drawing.Size(133, 22);
+            this.saveToFileButton.Size = new System.Drawing.Size(138, 22);
             this.saveToFileButton.Text = "Сохранить";
             this.saveToFileButton.Click += new System.EventHandler(this.SaveToFileButton_Click);
             // 
@@ -493,12 +555,58 @@
             this.importElementsBtn.Text = "Импорт элементов";
             this.importElementsBtn.Click += new System.EventHandler(this.ImportElementsBtn_Click);
             // 
+            // importTxtBtn
+            // 
+            this.importTxtBtn.Name = "importTxtBtn";
+            this.importTxtBtn.Size = new System.Drawing.Size(95, 20);
+            this.importTxtBtn.Text = "Импорт из txt";
+            this.importTxtBtn.Click += new System.EventHandler(this.ImportTxtBtn_Click);
+            // 
+            // defaultFolderBtn
+            // 
+            this.defaultFolderBtn.Name = "defaultFolderBtn";
+            this.defaultFolderBtn.Size = new System.Drawing.Size(144, 20);
+            this.defaultFolderBtn.Text = "Папка для протоколов";
+            this.defaultFolderBtn.Click += new System.EventHandler(this.DefaultFolderBtn_Click);
+            // 
+            // mergeIfDropChk
+            // 
+            this.mergeIfDropChk.Checked = true;
+            this.mergeIfDropChk.CheckOnClick = true;
+            this.mergeIfDropChk.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mergeIfDropChk.Name = "mergeIfDropChk";
+            this.mergeIfDropChk.Size = new System.Drawing.Size(201, 20);
+            this.mergeIfDropChk.Text = "Объединять при перетаскивании";
+            this.mergeIfDropChk.Click += new System.EventHandler(this.mergeIfDropChk_Click);
+            // 
+            // exportTxtButton
+            // 
+            this.exportTxtButton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.exportTxtButton.Location = new System.Drawing.Point(381, 415);
+            this.exportTxtButton.Name = "exportTxtButton";
+            this.exportTxtButton.Size = new System.Drawing.Size(598, 28);
+            this.exportTxtButton.TabIndex = 12;
+            this.exportTxtButton.Text = "Экспорт в txt";
+            this.exportTxtButton.UseVisualStyleBackColor = true;
+            this.exportTxtButton.Click += new System.EventHandler(this.exportTxtButton_Click);
+            // 
+            // importTranslateCheck
+            // 
+            this.importTranslateCheck.Checked = true;
+            this.importTranslateCheck.CheckOnClick = true;
+            this.importTranslateCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.importTranslateCheck.Name = "importTranslateCheck";
+            this.importTranslateCheck.Size = new System.Drawing.Size(159, 20);
+            this.importTranslateCheck.Text = "Переводить при импорте";
+            this.importTranslateCheck.Click += new System.EventHandler(this.importTranslateCheck_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(979, 471);
+            this.Controls.Add(this.exportTxtButton);
             this.Controls.Add(this.itemPanel);
             this.Controls.Add(this.createButton);
             this.Controls.Add(this.listPanel);
@@ -511,7 +619,6 @@
             this.TransparencyKey = System.Drawing.Color.Gray;
             this.listPanel.ResumeLayout(false);
             this.listPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.LoadingPictureBox)).EndInit();
             this.stack4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.copyConclusionBtn)).EndInit();
             this.stack3.ResumeLayout(false);
@@ -520,7 +627,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.copyNameBtn)).EndInit();
             this.stack1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.copyIDBtn)).EndInit();
+            this.elementsMenu.ResumeLayout(false);
             this.listButtonsPanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.LoadingPictureBox)).EndInit();
             this.itemPanel.ResumeLayout(false);
             this.itemPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.translateIDTextBox)).EndInit();
@@ -572,6 +681,16 @@
         private System.Windows.Forms.PictureBox translateIDTextBox;
         private System.Windows.Forms.ToolStripMenuItem importElementsBtn;
         private System.Windows.Forms.PictureBox LoadingPictureBox;
+        private System.Windows.Forms.ToolStripMenuItem importTxtBtn;
+        private System.Windows.Forms.ToolStripMenuItem openFromTxtBtn;
+        private System.Windows.Forms.ToolStripMenuItem defaultFolderBtn;
+        private System.Windows.Forms.ContextMenuStrip elementsMenu;
+        private System.Windows.Forms.ToolStripMenuItem deleteContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem deleteAllContext;
+        private System.Windows.Forms.ToolStripMenuItem mergeAllBtn;
+        private System.Windows.Forms.Button exportTxtButton;
+        private System.Windows.Forms.ToolStripMenuItem mergeIfDropChk;
+        private System.Windows.Forms.ToolStripMenuItem importTranslateCheck;
     }
 }
 

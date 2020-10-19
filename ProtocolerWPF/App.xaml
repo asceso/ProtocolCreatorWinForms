@@ -1,9 +1,9 @@
-﻿<Application x:Class="ProtocolCreatorWPF.App"
+﻿<prism:PrismApplication x:Class="ProtocolerWPF.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ProtocolCreatorWPF"
-             StartupUri="MainWindow.xaml">
+	     xmlns:prism="http://prismlibrary.com/"
+             xmlns:local="clr-namespace:ProtocolerWPF">
     <Application.Resources>
          
     </Application.Resources>
-</Application>
+</prism:PrismApplication>

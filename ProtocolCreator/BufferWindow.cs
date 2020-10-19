@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProtocolCreator.Models;
+using System;
 using System.IO;
 using System.Windows.Forms;
 
@@ -7,12 +8,14 @@ namespace ProtocolCreator
     public partial class BufferWindow : Form
     {
         private readonly string id;
-        public BufferWindow(string buffer, string id, string idCollection)
+        private readonly SettingsModel settings;
+        public BufferWindow(string buffer, string id, string idCollection, SettingsModel settings)
         {
             InitializeComponent();
             bufferTextBox.Text = buffer;
             idCollectionTextBox.Text = idCollection;
             this.id = id;
+            this.settings = settings;
         }
         private void CopyButton_Click(object sender, EventArgs e)
         {
@@ -22,7 +25,7 @@ namespace ProtocolCreator
         {
             FolderBrowserDialog folder = new FolderBrowserDialog
             {
-                SelectedPath = $"C:\\Users\\{Environment.UserName}\\Documents\\",
+                SelectedPath = settings.DefaultProtocolPath,
                 Description = "Выбор папки для сохранения"
             };
             string currentPath;

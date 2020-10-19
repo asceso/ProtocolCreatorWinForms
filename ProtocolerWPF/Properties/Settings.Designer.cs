@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProtocolCreatorWPF.Properties
+namespace ProtocolerWPF.Properties
 {
 
 
