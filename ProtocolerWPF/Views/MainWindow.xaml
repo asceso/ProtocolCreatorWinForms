@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        Height="600" Width="800" WindowStartupLocation="CenterScreen" WindowStyle="None" Style="{DynamicResource MainWindowStyle}" Loaded="Window_Loaded">
+        Height="600" Width="800" WindowStartupLocation="CenterScreen" WindowStyle="None" Style="{DynamicResource BaseWindowStyle}" Loaded="Window_Loaded">
     <WindowChrome.WindowChrome>
         <WindowChrome ResizeBorderThickness="2" CaptionHeight="0" GlassFrameThickness="4" />
     </WindowChrome.WindowChrome>
@@ -26,20 +26,20 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="2" Grid.Row="1"
                    HorizontalAlignment="Left" VerticalAlignment="Center"
-                   TextWrapping="Wrap" Text="{Binding Title}" Style="{DynamicResource TextBlockTitleStyle}"
+                   TextWrapping="Wrap" Text="{Binding Title}" Style="{DynamicResource TitleTextBlock}"
                    MouseDown="TextBlock_MouseDown"/>
         <Image Grid.Column="1" Grid.Row="1" Source="/ProtocolerWPF;component/Media/ApplicationIcon.png"/>
-        <Button Grid.Column="3" Grid.Row="1" Cursor="Hand" Style="{DynamicResource SimpleButtonStyle}" Command="{Binding ChangeThemeCommand}">
+        <Button Grid.Column="3" Grid.Row="1" Cursor="Hand" Style="{DynamicResource ShellButton}" Command="{Binding ChangeThemeCommand}">
             <Image  Source="{Binding CurrentTheme, UpdateSourceTrigger=PropertyChanged}"/>
         </Button>
-        <Button Grid.Column="6" Grid.Row="1" Cursor="Hand" Style="{DynamicResource SimpleButtonStyle}" Command="{Binding CloseApplicationCommand}">
-            <Image  Source="/ProtocolerWPF;component/Media/close.png"/>
+        <Button Grid.Column="6" Grid.Row="1" Cursor="Hand" Style="{DynamicResource ShellButton}" Command="{Binding CloseApplicationCommand}">
+            <Image Source="/ProtocolerWPF;component/Media/close.png" Stretch="Uniform"/>
         </Button>
-        <Button Grid.Column="5" Grid.Row="1" Cursor="Hand" Style="{DynamicResource SimpleButtonStyle}" Command="{Binding MaximizeApplicationCommand}">
-            <Image  Source="/ProtocolerWPF;component/Media/maximize.png"/>
+        <Button Grid.Column="5" Grid.Row="1" Cursor="Hand" Style="{DynamicResource ShellButton}" Command="{Binding MaximizeApplicationCommand}">
+            <Image Source="/ProtocolerWPF;component/Media/maximize.png"/>
         </Button>
-        <Button Grid.Column="4" Grid.Row="1" Cursor="Hand" Style="{DynamicResource SimpleButtonStyle}" Command="{Binding MinimizeApplicationCommand}">
-            <Image  Source="/ProtocolerWPF;component/Media/minimize.png"/>
+        <Button Grid.Column="4" Grid.Row="1" Cursor="Hand" Style="{DynamicResource ShellButton}" Command="{Binding MinimizeApplicationCommand}">
+            <Image Source="/ProtocolerWPF;component/Media/minimize.png"/>
         </Button>
         
         <ContentControl Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="6" prism:RegionManager.RegionName="MainRegion"/>

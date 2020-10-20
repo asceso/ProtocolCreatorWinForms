@@ -1,8 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:ProtocolerStyling.Common">
-    <!--#region Common-->
+
     <Style x:Key="BaseWindowStyle" TargetType="Window">
+        <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
         <Setter Property="BorderThickness" Value="0" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource Mode=Self}}" Value="Maximized">
@@ -10,15 +11,4 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
-    <!--#endregion-->
-    <!--#region Dark-->
-    <Style  BasedOn="{StaticResource BaseWindowStyle}" x:Key="WindowStyleDark" TargetType="Window">
-        <Setter Property="Background" Value="Black"/>
-    </Style>
-    <!--#endregion-->
-    <!--#region Light-->
-    <Style BasedOn="{StaticResource BaseWindowStyle}" x:Key="WindowStyleLight" TargetType="Window">
-        <Setter Property="Background" Value="White"/>
-    </Style>
-    <!--#endregion-->
 </ResourceDictionary>

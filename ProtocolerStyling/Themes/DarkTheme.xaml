@@ -1,18 +1,70 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:ProtocolerStyling.Themes">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/TextBlock.xaml"/>
-        <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/Buttons.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/Window.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/Buttons.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/TextBlock.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/ComboBox.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <!--#region TextBlocks -->
-    <Style TargetType="TextBlock" x:Key="TextBlockTitleStyle" BasedOn="{StaticResource TitleTextBlockDark}"/>
-    <Style TargetType="TextBlock" x:Key="TextBlockStyle" BasedOn="{StaticResource MainTextDark}"/>
+    <!--#region Window-->
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#1C1C1C" />
     <!--#endregion-->
-    
-    <Style TargetType="Window" x:Key="MainWindowStyle" BasedOn="{StaticResource WindowStyleDark}"/>
-    <Style TargetType="Button" x:Key="SimpleButtonStyle" BasedOn="{StaticResource ShellButton}"/>
+    <!--#region Button -->
+    <SolidColorBrush x:Key="ShellButtonBackgroundBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="ShellButtonBorderBrush" Color="Transparent" />
+    <SolidColorBrush x:Key="ShellButtonForegroundBrush" Color="Black" />
+
+    <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#993366" />
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#6D3F5B" />
+    <SolidColorBrush x:Key="ButtonForegroundBrush" Color="#C7D0CC" />
+
+    <SolidColorBrush x:Key="ButtonPressedBackgroundBrush" Color="#E1523D" />
+    <SolidColorBrush x:Key="ButtonPressedBorderBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="ButtonPressedForegroundBrush" Color="#646B63" />
+
+    <SolidColorBrush x:Key="ButtonToggleBackgroundBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="ButtonToggleBorderBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="ButtonToggleForegroundBrush" Color="#646B63" />
+
+    <SolidColorBrush x:Key="ButtonMouseOverBackgroundBrush" Color="#B3446C" />
+    <SolidColorBrush x:Key="ButtonMouseOverBorderBrush" Color="#6D3F5B" />
+    <SolidColorBrush x:Key="ButtonMouseOverForegroundBrush" Color="#C7D0CC" />
+
+    <SolidColorBrush x:Key="ButtonIsNotEnabledBackgroundBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="ButtonIsNotEnabledBorderBrush" Color="#6D3F5B" />
+    <SolidColorBrush x:Key="ButtonIsNotEnabledForegroundBrush" Color="#FFFACD" />
+    <!--#endregion-->
+    <!--#region TextBlock-->
+    <SolidColorBrush x:Key="TextBlockTitleForegroundBrush" Color="#C7D0CC" />
+    <SolidColorBrush x:Key="TextBlockMainForegroundBrush" Color="#C7D0CC" />
+    <!--#endregion-->
+    <!--#region ComboBox-->
+    <!-- Box -->
+    <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="#6D3F5B" />
+    <SolidColorBrush x:Key="ComboBoxBackgroundBrush" Color="#646B63" />
+
+    <SolidColorBrush x:Key="ComboBoxButtonBorderBrush" Color="#C7D0CC" />
+    <SolidColorBrush x:Key="ComboBoxButtonBackgroundBrush" Color="#993366" />
+    <SolidColorBrush x:Key="ComboBoxButtonColorBrush" Color="#C7D0CC" />
+
+    <SolidColorBrush x:Key="ComboBoxButtonMouseOverBackgroundBrush" Color="#B3446C" />
+    <SolidColorBrush x:Key="ComboBoxButtonMouseOverShapeBrush" Color="#C7D0CC" />
+
+    <SolidColorBrush x:Key="ComboBoxButtonCheckedBackgroundBrush" Color="#B3446C" />
+    <SolidColorBrush x:Key="ComboBoxButtonCheckedShapeBrush" Color="#C7D0CC" />
+
+    <SolidColorBrush x:Key="ComboBoxBackgroundDisabledBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="ComboBoxButtonBackgroundDisabledBrush" Color="#53377A" />
+    <SolidColorBrush x:Key="ComboBoxButtonShapeDisabledBrush" Color="DarkBlue" />
+
+    <!-- DropMenu -->
+    <SolidColorBrush x:Key="ComboBoxDropMenuBackgroundBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="ComboBoxDropMenuBorderBrush" Color="#993366" />
+
+    <!-- Font -->
+    <SolidColorBrush x:Key="ComboBoxForegroundBrush" Color="#C7D0CC" />
+    <SolidColorBrush x:Key="ComboBoxDisabledForegroundBrush" Color="#C7D0CC" />
+    <!--#endregion-->
 </ResourceDictionary>

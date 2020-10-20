@@ -5,9 +5,11 @@ using Prism.Regions;
 using Unity;
 using Prism.Mvvm;
 using ProtocolViewer.ViewModels;
+using SettingsModule.Views;
 
 namespace ProtocolViewer
 {
+    [Module(ModuleName = "ProtocolViewer")]
     public class ProtocolViewerModule : IModule
     {
         private readonly IRegionManager regionManager;

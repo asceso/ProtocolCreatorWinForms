@@ -92,7 +92,16 @@
       <Version>5.11.7</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\CommonMethods\CommonMethods.csproj">
+      <Project>{566C01C6-F6E5-46A5-8486-582ADFBA762E}</Project>
+      <Name>CommonMethods</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonModels\CommonModels.csproj">
+      <Project>{CD3D9ACB-DCB4-4CA4-874D-297E1055677C}</Project>
+      <Name>CommonModels</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetPath)" "$(SolutionDir)\ProtocolerWPF\bin\$(ConfigurationName)\Modules\" /Y</PostBuildEvent>

@@ -27,7 +27,7 @@ namespace ProtocolerWPF
 
         protected override IModuleCatalog CreateModuleCatalog()
         {
-            return new DirectoryModuleCatalog() { ModulePath = Environment.CurrentDirectory+"\\Modules\\" };
+            return new DirectoryModuleCatalog() { ModulePath = @".\Modules" };
         }
     }
 }

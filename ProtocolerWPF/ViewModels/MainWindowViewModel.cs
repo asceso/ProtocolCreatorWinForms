@@ -1,9 +1,9 @@
-﻿using Prism.Commands;
-using Prism.Modularity;
+﻿using CommonMethods;
+using CommonModels;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
-using ProtocolerWPF.Views;
-using ProtocolViewer.Views;
+using ProtocolerWPF.Properties;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -19,6 +19,8 @@ namespace ProtocolerWPF.ViewModels
         private string title = "Конструктор протоколов";
         private ResourceDictionary[] themes;
         private string currentTheme;
+        private bool themeInit = false;
+        private SettingsModel settings;
         #endregion Fields
 
         #region Commands
@@ -45,13 +47,22 @@ namespace ProtocolerWPF.ViewModels
                 SetProperty(ref currentTheme, value);
             }
         }
+        public SettingsModel Settings
+        {
+            get => settings;
+            set
+            {
+                SetProperty(ref settings, value);
+            }
+        }
         #endregion Properties
 
         #region Ctor
         public MainWindowViewModel(IRegionManager regionManager, IUnityContainer container)
         {
             themes = Application.Current.Resources.MergedDictionaries.ToArray();
-            CurrentTheme = Properties.Resources.DarkThemeIconPath;
+            Settings = SettingsMethods.ReadSettingsFromJson();
+            CurrentTheme = Settings.DefaultTheme.Equals("Темная") ? Resources.DarkThemeIconPath : Resources.LightThemeIconPath;
             OnChangeTheme();
 
             this.regionManager = regionManager;
@@ -61,16 +72,10 @@ namespace ProtocolerWPF.ViewModels
             CloseApplicationCommand = new DelegateCommand(()=> Application.Current.Shutdown());
             MinimizeApplicationCommand = new DelegateCommand(OnMinimizeApplication);
             MaximizeApplicationCommand = new DelegateCommand(OnMaximizeApplication);
-
-            //container.RegisterType<object, Test>(nameof(Test));
         }
         public void AfterInit()
         {
-            //var moduleManager = container.Resolve<IModuleManager>();
-            //moduleManager.LoadModule(nameof(ProtocolViewer.ProtocolViewerModule));
-            //regionManager.RequestNavigate("MainRegion", nameof(Test));
-
-            regionManager.RequestNavigate("MainRegion", nameof(ProtocolsView));
+            regionManager.RequestNavigate("MainRegion", "ProtocolsView");
         }
         #endregion Ctor
 
@@ -78,15 +83,24 @@ namespace ProtocolerWPF.ViewModels
         private void OnChangeTheme()
         {
             Application.Current.Resources.MergedDictionaries.Clear();
-            if (CurrentTheme.Equals(Properties.Resources.DarkThemeIconPath))
+            if (themeInit)
             {
-                Application.Current.Resources.MergedDictionaries.Add(themes[1]);
-                CurrentTheme = Properties.Resources.LightThemeIconPath;
+                if (CurrentTheme.Equals(Properties.Resources.DarkThemeIconPath))
+                {
+                    Application.Current.Resources.MergedDictionaries.Add(themes[1]);
+                    CurrentTheme = Properties.Resources.LightThemeIconPath;
+                }
+                else
+                {
+                    Application.Current.Resources.MergedDictionaries.Add(themes[0]);
+                    CurrentTheme = Properties.Resources.DarkThemeIconPath;
+                }
             }
             else
             {
-                Application.Current.Resources.MergedDictionaries.Add(themes[0]);
-                CurrentTheme = Properties.Resources.DarkThemeIconPath;
+                Application.Current.Resources.MergedDictionaries.Add(
+                    CurrentTheme.Equals(Properties.Resources.DarkThemeIconPath) ? themes[0] : themes[1]);
+                themeInit = true;
             }
         }
         private void OnMinimizeApplication()

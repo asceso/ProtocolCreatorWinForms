@@ -8,6 +8,7 @@ using Unity;
 
 namespace SettingsModule
 {
+    [Module(ModuleName = "SettingsModule")]
     public class SettingsModuleModule : IModule
     {
         private readonly IRegionManager regionManager;

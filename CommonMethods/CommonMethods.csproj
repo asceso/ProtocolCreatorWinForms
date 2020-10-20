@@ -4,20 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{31FA0BB5-BA9B-488F-AA42-1B6CBED3BC3E}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ProtocolerWPF</RootNamespace>
-    <AssemblyName>ProtocolerWPF</AssemblyName>
+    <ProjectGuid>{566C01C6-F6E5-46A5-8486-582ADFBA762E}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <RootNamespace>CommonMethods</RootNamespace>
+    <AssemblyName>CommonMethods</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -27,7 +24,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -35,13 +31,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Media\ApplicationIcon.ico</ApplicationIcon>
-  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -54,25 +49,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Page Include="Views\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -88,63 +64,22 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="SettingsMethods.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Prism.Unity" Version="7.2.0.1422" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Media\close.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Media\maximize.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Media\minimize.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CommonMethods\CommonMethods.csproj">
-      <Project>{566C01C6-F6E5-46A5-8486-582ADFBA762E}</Project>
-      <Name>CommonMethods</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CommonModels\CommonModels.csproj">
-      <Project>{cd3d9acb-dcb4-4ca4-874d-297e1055677c}</Project>
+      <Project>{CD3D9ACB-DCB4-4CA4-874D-297E1055677C}</Project>
       <Name>CommonModels</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ProtocolerStyling\ProtocolerStyling.csproj">
-      <Project>{8cd0dfb1-6aa7-4f27-a1ac-5a14df3e32fa}</Project>
-      <Name>ProtocolerStyling</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ProtocolViewer\ProtocolViewer.csproj">
-      <Project>{f68244b9-4575-4c44-80af-30c46a8ccf89}</Project>
-      <Name>ProtocolViewer</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Media\ApplicationIcon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Media\ApplicationIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Media\paint-light.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Media\paint-dark.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Media\settings.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>erase "$(TargetDir)\ProtocolViewer.dll" \Q
-erase "$(TargetDir)\ProtocolViewer.pdb" \Q</PostBuildEvent>
-  </PropertyGroup>
 </Project>

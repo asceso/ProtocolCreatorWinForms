@@ -1,22 +1,35 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Regions;
+using ProtocolViewer.Views;
 using System.Windows.Input;
 
 namespace ProtocolViewer.ViewModels
 {
-    class ProtocolsViewVM : BindableBase
+    public class ProtocolsViewVM : BindableBase
     {
-        private string _message;
-        public string Message
+        #region Fields
+        private readonly IRegionManager regionManager;
+        #endregion Fields
+        #region Properties
+        #endregion
+        #region Commands
+        public ICommand OpenSettingsCommand { get; private set; }
+        #endregion Commands
+        #region Ctor
+        public ProtocolsViewVM(IRegionManager regionManager)
         {
-            get { return _message; }
-            set { SetProperty(ref _message, value); }
+            this.regionManager = regionManager;
+            OpenSettingsCommand = new DelegateCommand(OnOpenSettings);
         }
-        public ICommand GetAct { get; set; }
-        public ProtocolsViewVM()
+        #endregion Ctor
+        #region Methods
+        private void OnOpenSettings()
         {
-            Message = "Protocol views";
-            GetAct = new DelegateCommand(() => Message = "Кнопка была нажата");
+            NavigationParameters nav = new NavigationParameters();
+            nav.Add("backUri", nameof(ProtocolsView));
+            regionManager.RequestNavigate("MainRegion", "SettingsView",nav);
         }
+        #endregion Methods
     }
 }
