@@ -7,7 +7,7 @@
         <Setter Property="BorderThickness" Value="0" />
         <Style.Triggers>
             <DataTrigger Binding="{Binding WindowState, RelativeSource={RelativeSource Mode=Self}}" Value="Maximized">
-                <Setter Property="BorderThickness" Value="7" />
+                <Setter Property="BorderThickness" Value="0,0,0,16" />
             </DataTrigger>
         </Style.Triggers>
     </Style>

@@ -15,6 +15,7 @@ namespace ProtocolerWPF.Views
         public MainWindow()
         {
             InitializeComponent();
+            this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
         }
         //After initialize components loading start View
         private void Window_Loaded(object sender, RoutedEventArgs e)

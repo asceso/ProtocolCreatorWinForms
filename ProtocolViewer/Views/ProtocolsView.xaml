@@ -11,10 +11,11 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <Grid ShowGridLines="False">
+        <!--#region Markup-->
         <Grid.RowDefinitions>
             <RowDefinition Height="5"/>
-            <RowDefinition Height="40"/>
-            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -30,18 +31,25 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="5"/>
         </Grid.ColumnDefinitions>
+        <!--#endregion-->
+        <!--#region ToolBoxButtons-->
         <Button Grid.Column="1" Grid.Row="1" Cursor="Hand" 
                 Style="{DynamicResource ShellButton}" Command="{Binding OpenSettingsCommand}">
             <Image  Source="/ProtocolerWPF;component/Media/settings.png"/>
         </Button>
+        <!--#endregion-->
+        <!--#region CommonElements-->
         <StackPanel Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Vertical">
             <TextBlock Text="Выбор типа элемента" Style="{DynamicResource MainTextBlock}" HorizontalAlignment="Center"/>
-            <ComboBox Style="{DynamicResource SimpleComboBoxInStack}" Width="auto" Margin="2,0,2,0"
+            <ComboBox Style="{DynamicResource SimpleComboBoxInStack}" Width="auto" Margin="2,0,2,3"
                       ItemsSource="{Binding AvailableItems}" SelectedItem="{Binding SelectedProtocolItem}"/>
         </StackPanel>
+        <!--#endregion-->
+        
+        <!--#region TextBoxPreview -->
         <ScrollViewer Visibility="{Binding Path=TextBoxItemVisibility,
                       UpdateSourceTrigger=PropertyChanged, 
-                      Converter={StaticResource BooleanToVisibilityConverter}}" 
+                      Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,2,0"
                       Grid.Row="3" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Hidden">
             <StackPanel Orientation="Vertical">
                 <TextBlock Text="ID элемента" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
@@ -49,34 +57,48 @@
                 <TextBlock Text="Name" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
                 <TextBox Text="{Binding TextBoxModel.Name, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
                 <TextBlock Text="Value" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
-                <TextBox Text="{Binding TextBoxModel.Value, UpdateSourceTrigger=PropertyChanged}" 
+                <TextBox Text="{Binding TextBoxModel.Value, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"
                          VerticalScrollBarVisibility="Auto" Style="{DynamicResource SimpleTextBox}" Height="150"/>
-                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock Text="IsEnabled" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <!--#region CheckBoxes-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                     <CheckBox IsChecked="{Binding TextBoxModel.IsEnabled, UpdateSourceTrigger=PropertyChanged}"
-                              Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
-                    <TextBlock Text="IsStretch" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsEnabled (Включен)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <CheckBox IsChecked="{Binding TextBoxModel.IsStretch, UpdateSourceTrigger=PropertyChanged}"
-                              Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
-                    <TextBlock Text="IsVisible" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsStretch (Растягивание)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <CheckBox IsChecked="{Binding TextBoxModel.IsVisible, UpdateSourceTrigger=PropertyChanged}"
-                              Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
-                    <TextBlock Text="IsLabelVisible" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsVisible (Видимость)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <CheckBox IsChecked="{Binding TextBoxModel.IsLabelVisible, UpdateSourceTrigger=PropertyChanged}"
-                              Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
-                    <TextBlock Text="IsBoldLabel" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsLabelVisible (Видимость заголовка)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <CheckBox IsChecked="{Binding TextBoxModel.IsBoldLabel, UpdateSourceTrigger=PropertyChanged}"
-                              Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
-                    <TextBlock Text="IsConclusion" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                                  Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsBoldLabel (Жирный шрифт)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <CheckBox IsChecked="{Binding TextBoxModel.IsConclusion, UpdateSourceTrigger=PropertyChanged}"
-                              Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
-                </WrapPanel>
+                                  Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsConclusion (Является заключением)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <!--#endregion-->
                 <TextBlock Text="Lines" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
                 <Grid>
+                    <!--#region Markup-->
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="25"/>
                     </Grid.ColumnDefinitions>
+                    <!--#endregion-->
                     <TextBox Text="{Binding TextBoxModel.Lines, UpdateSourceTrigger=PropertyChanged}" 
                              Grid.Column="0" Style="{DynamicResource SimpleNumericTextBox}"/>
                     <StackPanel Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical">
@@ -86,17 +108,249 @@
                                       Content="-" Style="{DynamicResource SimpleRepeatButtonDown}"/>
                     </StackPanel>
                 </Grid>
+                <Button Style="{DynamicResource SimpleButton}" Width="auto" Height="25" Margin="0,5,0,0" 
+                        Content="Сбросить изменения" Command="{Binding ResetCurrentModelCommand}"/>
             </StackPanel>
         </ScrollViewer>
+        <!--#endregion-->
+        <!--#region TextBlockPreview -->
+        <ScrollViewer Visibility="{Binding Path=TextBlockItemVisibility,
+                      UpdateSourceTrigger=PropertyChanged, 
+                      Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,0,5"
+                      Grid.Row="3" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Hidden">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="ID элемента" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding TextBlockModel.ID, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
+                <TextBlock Text="Name" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding TextBlockModel.Name, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
+                <TextBlock Text="Value" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding TextBlockModel.Value, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto" Style="{DynamicResource SimpleTextBox}" Height="150"/>
+                <!--#region CheckBoxes-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding TextBlockModel.IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsEnabled (Включен)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding TextBlockModel.IsStretch, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsStretch (Растягивание)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding TextBlockModel.IsVisible, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsVisible (Видимость)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding TextBlockModel.IsBold, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsBold (Жирный шрифт)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <!--#endregion-->
+                <TextBlock Text="MinWidth" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <Grid>
+                    <!--#region Markup-->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="25"/>
+                    </Grid.ColumnDefinitions>
+                    <!--#endregion-->
+                    <TextBox Text="{Binding TextBlockModel.MinWidth, UpdateSourceTrigger=PropertyChanged}" 
+                             Grid.Column="0" Style="{DynamicResource SimpleNumericTextBox}"/>
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical">
+                        <RepeatButton Command="{Binding NumericClickCommand}" CommandParameter="UP" 
+                                      Content="+" Style="{DynamicResource SimpleRepeatButtonUp}"/>
+                        <RepeatButton Command="{Binding NumericClickCommand}" CommandParameter="DOWN" 
+                                      Content="-" Style="{DynamicResource SimpleRepeatButtonDown}"/>
+                    </StackPanel>
+                </Grid>
+                <Button Style="{DynamicResource SimpleButton}" Width="auto" Height="25" Margin="0,5,0,0" 
+                        Content="Сбросить изменения" Command="{Binding ResetCurrentModelCommand}"/>
+            </StackPanel>
+        </ScrollViewer>
+        <!--#endregion-->
+        <!--#region DatePreview -->
+        <ScrollViewer Visibility="{Binding Path=DateItemVisibility,
+                      UpdateSourceTrigger=PropertyChanged, 
+                      Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,0,5"
+                      Grid.Row="3" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Hidden">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="ID элемента" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding DateModel.ID, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
+                <TextBlock Text="Name" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding DateModel.Name, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
+                <TextBlock Text="Tooltip" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding DateModel.ToolTip, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
+                <!--#region CheckBoxes-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding DateModel.IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsEnabled (Включен)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding DateModel.IsVisible, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsVisible (Видимость)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding DateModel.IsLabelVisible, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsLabelVisible (Видимость заголовка)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <!--#endregion-->
+                <Button Style="{DynamicResource SimpleButton}" Width="auto" Height="25" Margin="0,5,0,0" 
+                        Content="Сбросить изменения" Command="{Binding ResetCurrentModelCommand}"/>
+            </StackPanel>
+        </ScrollViewer>
+        <!--#endregion-->
+        <!--#region CheckBoxPreview -->
+        <ScrollViewer Visibility="{Binding Path=CheckBoxItemVisibility,
+                      UpdateSourceTrigger=PropertyChanged, 
+                      Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,0,5"
+                      Grid.Row="3" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Hidden">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="ID элемента" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding CheckBoxModel.ID, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
+                <TextBlock Text="Name" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding CheckBoxModel.Name, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
+                <TextBlock Text="TextTrue" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding CheckBoxModel.TextTrue, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
+                <TextBlock Text="TextFalse" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding CheckBoxModel.TextFalse, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
+                <!--#region CheckBoxes-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding CheckBoxModel.IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsEnabled (Включен)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding CheckBoxModel.IsVisible, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsVisible (Видимость)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding CheckBoxModel.IsLabelVisible, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsLabelVisible (Видимость заголовка)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <!--#endregion-->
+                <TextBlock Text="MinWidth" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <Grid>
+                    <!--#region Markup-->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="25"/>
+                    </Grid.ColumnDefinitions>
+                    <!--#endregion-->
+                    <TextBox Text="{Binding CheckBoxModel.MinWidth, UpdateSourceTrigger=PropertyChanged}" 
+                             Grid.Column="0" Style="{DynamicResource SimpleNumericTextBox}"/>
+                    <StackPanel Grid.Column="1" HorizontalAlignment="Left" Orientation="Vertical">
+                        <RepeatButton Command="{Binding NumericClickCommand}" CommandParameter="UP" 
+                                      Content="+" Style="{DynamicResource SimpleRepeatButtonUp}"/>
+                        <RepeatButton Command="{Binding NumericClickCommand}" CommandParameter="DOWN" 
+                                      Content="-" Style="{DynamicResource SimpleRepeatButtonDown}"/>
+                    </StackPanel>
+                </Grid>
+                <Button Style="{DynamicResource SimpleButton}" Width="auto" Height="25" Margin="0,5,0,0" 
+                        Content="Сбросить изменения" Command="{Binding ResetCurrentModelCommand}"/>
+            </StackPanel>
+        </ScrollViewer>
+        <!--#endregion-->
+        <!--#region ComboBoxPreview -->
+        <ScrollViewer Visibility="{Binding Path=ComboBoxItemVisibility,
+                      UpdateSourceTrigger=PropertyChanged, 
+                      Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,0,5"
+                      Grid.Row="3" Grid.Column="2" Grid.RowSpan="3" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Hidden">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="ID элемента" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding ComboBoxModel.ID, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
+                <TextBlock Text="Name" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding ComboBoxModel.Name, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
+                <TextBlock Text="Value (Выбранный элемент)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <TextBox Text="{Binding ComboBoxModel.Value, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto" Style="{DynamicResource SimpleTextBox}" Height="50"/>
+                <!--#region ListBox-->
+                <TextBlock Text="Values (Значения комбобокса)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                <ListBox Height="150" ItemsSource="{Binding ComboBoxModel.Values}" SelectedItem="{Binding CBListBoxSelectedItem}"/>
+                <Grid>
+                    <!--#region Markup-->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <!--#endregion-->
+                    <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding CBListBoxTemplateItem, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"
+                         VerticalScrollBarVisibility="Auto" Margin="0,3,0,0" Style="{DynamicResource SimpleTextBox}" Height="25"/>
+                    <Button Content="Добавить" Command="{Binding CBAddListBoxItem}" 
+                        Grid.Row="1"  Grid.Column="0" Style="{DynamicResource SimpleButton}" Height="25" Margin="0,3,0,3" Width="auto"/>
+                    <Button Content="Изменить" Command="{Binding CBEditListBoxItem}"
+                        Grid.Row="1" Grid.Column="1" Style="{DynamicResource SimpleButton}" Height="25" Margin="5,3,0,3" Width="auto"/>
+                    <Button Content="Удалить" Command="{Binding CBDeleteListBoxItem}"
+                        Grid.Row="1" Grid.Column="2" Style="{DynamicResource SimpleButton}" Height="25" Margin="5,3,0,3" Width="auto"/>
+                </Grid>
+                <!--#endregion-->
+                <!--#region CheckBoxes-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding ComboBoxModel.IsEnabled, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsEnabled (Включен)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding ComboBoxModel.IsVisible, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsVisible (Видимость)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding ComboBoxModel.IsLabelVisible, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsLabelVisible (Видимость заголовка)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding ComboBoxModel.IsTextEditable, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsTextEditable (Редактирование текста)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding ComboBoxModel.IsConclusionTemplate, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsConclusionTemplate (Шаблон закл.)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding ComboBoxModel.IsSelectedFromNetrika, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsSelectedFromNetrika (Из нетрики)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                    <CheckBox IsChecked="{Binding ComboBoxModel.IsUseNetrika, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="3,5,3,3" Style="{DynamicResource SimpleCheckBox}"/>
+                    <TextBlock Text="IsUseNetrika (Использовать нетрику)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <!--#endregion-->
+                <Button Style="{DynamicResource SimpleButton}" Width="auto" Height="25" Margin="0,5,0,0" 
+                        Content="Сбросить изменения" Command="{Binding ResetCurrentModelCommand}"/>
+            </StackPanel>
+        </ScrollViewer>
+        <!--#endregion-->
+        
+        <!--#region ItemPreviewZone-->
         <StackPanel Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="3" Grid.RowSpan="4" Orientation="Vertical" Margin="5,0,5,0">
             <TextBlock Text="Предпросмотр" Style="{DynamicResource MainTextBlock}" HorizontalAlignment="Center"/>
-            <TextBox x:Name="PreviewBufferName" Text="{Binding PreviewResult, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Style="{DynamicResource SimpleTextBox}"
+            <TextBox x:Name="PreviewBufferName" Text="{Binding PreviewResult, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                     Style="{DynamicResource SimpleTextBox}" HorizontalContentAlignment="Stretch"
                      VerticalScrollBarVisibility="Auto" Height="225" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
             <Grid>
+                <!--#region Markup-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
+                <!--#endregion-->
                 <Button Content="Выделить весь текст" Click="OnSelectAllTextButtonClick" 
                         Grid.Column="0" Style="{DynamicResource SimpleButton}" Height="25" Margin="0,3,0,3" Width="auto"/>
                 <Button Content="Скопировать в буфер обмена" Click="OnCopyClipboardClick"
@@ -105,5 +359,6 @@
             <Button Content="Сгенерировать код" Command="{Binding GenerateCodeCommand}" Style="{DynamicResource SimpleButton}"
                     Width="auto" Height="25" Margin="0,0,0,3"/>
         </StackPanel>
+        <!--#endregion-->
     </Grid>
 </UserControl>
