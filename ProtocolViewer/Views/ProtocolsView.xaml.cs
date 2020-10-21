@@ -24,5 +24,16 @@ namespace ProtocolViewer.Views
         {
             InitializeComponent();
         }
+        private void OnSelectAllTextButtonClick(object sender, RoutedEventArgs e)
+        {
+            PreviewBufferName.Focus();
+            PreviewBufferName.SelectAll();
+        }
+        private void OnCopyClipboardClick(object sender, RoutedEventArgs e)
+        {
+            if (PreviewBufferName.SelectedText.Equals(string.Empty))
+                return;
+            Clipboard.SetText(PreviewBufferName.SelectedText);
+        }
     }
 }

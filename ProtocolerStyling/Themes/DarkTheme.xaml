@@ -6,6 +6,8 @@
         <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/Buttons.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/TextBlock.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/ComboBox.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/TextBox.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/CheckBox.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <!--#region Window-->
@@ -66,5 +68,30 @@
     <!-- Font -->
     <SolidColorBrush x:Key="ComboBoxForegroundBrush" Color="#C7D0CC" />
     <SolidColorBrush x:Key="ComboBoxDisabledForegroundBrush" Color="#C7D0CC" />
+    <!--#endregion-->
+    <!--#region TextBox -->
+    <SolidColorBrush x:Key="TextBoxBackgroundBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="TextBoxBorderBrush" Color="#6D3F5B" />
+    <SolidColorBrush x:Key="TextBoxForegroundBrush" Color="#C7D0CC" />
+    
+    <SolidColorBrush x:Key="TextBoxMouseOverBorderBrush" Color="#993366" />
+    <SolidColorBrush x:Key="TextBoxKeyboardFocusedBorderBrush" Color="#993366" />
+    <!--#endregion-->
+    <!--#region CheckBox -->
+    <SolidColorBrush x:Key="CheckBoxBacgroundBrush" Color="#646B63"/>
+    <SolidColorBrush x:Key="CheckBoxBorderBrush" Color="#6D3F5B"/>
+    <SolidColorBrush x:Key="CheckBoxShapeBrush" Color="#993366"/>
+
+    <SolidColorBrush x:Key="CheckBoxMouseOverBackgroundBrush" Color="#646B63"/>
+    <SolidColorBrush x:Key="CheckBoxMouseOverBorderBrush" Color="#993366"/>
+    <SolidColorBrush x:Key="CheckBoxShapeMouseOverBrush" Color="#991166"/>
+
+    <SolidColorBrush x:Key="CheckBoxPressedBackgroundBrush" Color="#646B63"/>
+    <SolidColorBrush x:Key="CheckBoxPressedBorderBrush" Color="#993366"/>
+    <SolidColorBrush x:Key="CheckBoxShapePressedBrush" Color="#991166"/>
+    
+    <SolidColorBrush x:Key="CheckBoxDisabledBackgroundBrush" Color="#646B63"/>
+    <SolidColorBrush x:Key="CheckBoxDisabledBorderBrush" Color="#646B63"/>
+    <SolidColorBrush x:Key="CheckBoxShapeDisabledBrush" Color="BlanchedAlmond"/>
     <!--#endregion-->
 </ResourceDictionary>

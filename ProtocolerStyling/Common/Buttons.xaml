@@ -17,7 +17,7 @@
         <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
+                <ControlTemplate TargetType="Button">
                     <Border x:Name="border" 
                                 CornerRadius="5"
                                 BorderBrush="{DynamicResource ButtonBorderBrush}" 
@@ -59,5 +59,107 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style x:Key="SimpleRepeatButtonUp" TargetType="RepeatButton">
+        <Setter Property="Width" Value="25"/>
+        <Setter Property="Height" Value="15"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
+        <Setter Property="FontSize" Value="9"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Border x:Name="border" 
+                            CornerRadius="0,5,0,0"
+                            BorderBrush="{DynamicResource ButtonBorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Background="{DynamicResource ButtonBackgroundBrush}"  
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                          Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" 
+                                          Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                          Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" 
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource ButtonPressedBackgroundBrush}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource ButtonPressedBorderBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonPressedForegroundBrush}"/>
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource ButtonToggleBackgroundBrush}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource ButtonToggleBorderBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonToggleForegroundBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource ButtonMouseOverBackgroundBrush}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource ButtonMouseOverBorderBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonMouseOverForegroundBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource ButtonIsNotEnabledBackgroundBrush}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource ButtonIsNotEnabledBorderBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonIsNotEnabledForegroundBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SimpleRepeatButtonDown" TargetType="RepeatButton">
+        <Setter Property="Width" Value="25"/>
+        <Setter Property="Height" Value="15"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}"/>
+        <Setter Property="FontSize" Value="9"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Border x:Name="border" 
+                            CornerRadius="0,0,5,0"
+                            BorderBrush="{DynamicResource ButtonBorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Background="{DynamicResource ButtonBackgroundBrush}"  
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" 
+                                          Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" 
+                                          Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                          Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" 
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource ButtonPressedBackgroundBrush}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource ButtonPressedBorderBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonPressedForegroundBrush}"/>
+                        </Trigger>
+                        <Trigger Property="ToggleButton.IsChecked" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource ButtonToggleBackgroundBrush}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource ButtonToggleBorderBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonToggleForegroundBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource ButtonMouseOverBackgroundBrush}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource ButtonMouseOverBorderBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonMouseOverForegroundBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" TargetName="border" Value="{DynamicResource ButtonIsNotEnabledBackgroundBrush}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource ButtonIsNotEnabledBorderBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonIsNotEnabledForegroundBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

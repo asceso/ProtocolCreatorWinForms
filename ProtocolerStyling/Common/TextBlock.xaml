@@ -14,9 +14,10 @@
         <Setter Property="Foreground" Value="{DynamicResource TextBlockMainForegroundBrush}"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,5"/>
     </Style>
 
     <Style x:Key="TextBlockInStack" TargetType="TextBlock" BasedOn="{StaticResource MainTextBlock}">
-        <Setter Property="Margin" Value="7, 0, 0, 0"/>
+        <Setter Property="Margin" Value="3,5,3,5"/>
     </Style>
 </ResourceDictionary>
