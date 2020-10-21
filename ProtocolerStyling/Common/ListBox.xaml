@@ -1,0 +1,90 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ProtocolerStyling.Common">
+    
+    <Style x:Key="SimpleListBoxItem" TargetType="ListBoxItem">
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Padding" Value="3"/>
+        <Setter Property="Background" Value="{DynamicResource ListBoxItemBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ListBoxItemBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ListBoxItemForegroundBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Grid.ColumnSpan="2" x:Name="brd" 
+                                CornerRadius="6"
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                        </Border>
+                        <CheckBox Grid.Column="0" 
+                                Style="{DynamicResource SimpleCheckBox}" 
+                                Focusable="False" 
+                                Margin="{TemplateBinding Padding}" 
+                                Foreground="{TemplateBinding Foreground}"
+                                IsChecked="{Binding Path=IsSelected, RelativeSource={RelativeSource TemplatedParent},Mode=TwoWay}">
+                        </CheckBox>
+                        <ContentPresenter Grid.Column="1" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ListBoxSelectedItemBackgroundBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ListBoxSelectedItemForegroundBrush}"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource ListBoxSelectedItemBorderBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource ListBoxSelectedItemMouseOverBackgroundBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ListBoxSelectedItemMouseOverForegroundBrush}"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource ListBoxSelectedItemMouseOverBorderBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Background" Value="{DynamicResource ListBoxItemDisabledBackgroundBrush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource ListBoxItemDisabledForegroundBrush}"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Opacity" Value="0.8"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource ListBoxItemDisabledBorderBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SimpleListBox" TargetType="ListBox">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Margin" Value="1"/>
+        <Setter Property="Padding" Value="0"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource ListBoxDisabledBackgroundBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ListBoxDisabledBorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Opacity" Value="0.66"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="SimpleListBoxBorder" TargetType="Border">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Background" Value="{DynamicResource ListBoxBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ListBoxBorderBrush}"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource ListBoxDisabledBackgroundBrush}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource ListBoxDisabledBorderBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Opacity" Value="0.66"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

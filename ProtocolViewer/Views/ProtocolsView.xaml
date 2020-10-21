@@ -45,7 +45,7 @@
                       ItemsSource="{Binding AvailableItems}" SelectedItem="{Binding SelectedProtocolItem}"/>
         </StackPanel>
         <!--#endregion-->
-        
+
         <!--#region TextBoxPreview -->
         <ScrollViewer Visibility="{Binding Path=TextBoxItemVisibility,
                       UpdateSourceTrigger=PropertyChanged, 
@@ -272,7 +272,12 @@
                          VerticalScrollBarVisibility="Auto" Style="{DynamicResource SimpleTextBox}" Height="50"/>
                 <!--#region ListBox-->
                 <TextBlock Text="Values (Значения комбобокса)" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
-                <ListBox Height="150" ItemsSource="{Binding ComboBoxModel.Values}" SelectedItem="{Binding CBListBoxSelectedItem}"/>
+                <Border Style="{DynamicResource SimpleListBoxBorder}">
+                    <ListBox SelectionChanged="ListBox_SelectionChanged" Height="150" ItemsSource="{Binding ComboBoxModel.Values}" 
+                             SelectedItem="{Binding CBListBoxSelectedItem}"
+                             Style="{DynamicResource SimpleListBox}"
+                             ItemContainerStyle="{DynamicResource SimpleListBoxItem}"/>
+                </Border>
                 <Grid>
                     <!--#region Markup-->
                     <Grid.ColumnDefinitions>
@@ -337,7 +342,7 @@
             </StackPanel>
         </ScrollViewer>
         <!--#endregion-->
-        
+
         <!--#region ItemPreviewZone-->
         <StackPanel Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="3" Grid.RowSpan="4" Orientation="Vertical" Margin="5,0,5,0">
             <TextBlock Text="Предпросмотр" Style="{DynamicResource MainTextBlock}" HorizontalAlignment="Center"/>

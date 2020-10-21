@@ -12,7 +12,7 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Border x:Name="checkBoxBorder" CornerRadius="9" BorderBrush="{TemplateBinding BorderBrush}" 
+                        <Border x:Name="checkBoxBorder" CornerRadius="10" BorderBrush="{TemplateBinding BorderBrush}" 
                                 Width="20" Height="20"
                                 BorderThickness="2.2" Background="{TemplateBinding Background}" 
                                 HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 

@@ -12,7 +12,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
-                    <Border x:Name="border" CornerRadius="3" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                    <Border x:Name="border" CornerRadius="6" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                         <ScrollViewer x:Name="PART_ContentHost" Focusable="False" Margin="5"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -42,7 +42,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
-                    <Border x:Name="border" CornerRadius="3,0,0,3" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                    <Border x:Name="border" CornerRadius="5,0,0,5" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
                         <ScrollViewer x:Name="PART_ContentHost" Focusable="False" Margin="5"/>
                     </Border>
                     <ControlTemplate.Triggers>

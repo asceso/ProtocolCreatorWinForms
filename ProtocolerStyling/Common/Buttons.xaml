@@ -19,7 +19,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="border" 
-                                CornerRadius="5"
+                                CornerRadius="6"
                                 BorderBrush="{DynamicResource ButtonBorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}" 
                                 Background="{DynamicResource ButtonBackgroundBrush}" 

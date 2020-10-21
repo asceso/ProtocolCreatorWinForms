@@ -8,6 +8,7 @@
         <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/ComboBox.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/TextBox.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/CheckBox.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/ListBox.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <!--#region Window-->
@@ -93,5 +94,28 @@
     <SolidColorBrush x:Key="CheckBoxDisabledBackgroundBrush" Color="#646B63"/>
     <SolidColorBrush x:Key="CheckBoxDisabledBorderBrush" Color="#646B63"/>
     <SolidColorBrush x:Key="CheckBoxShapeDisabledBrush" Color="BlanchedAlmond"/>
+    <!--#endregion-->
+    <!--#region ListBox-->
+    <SolidColorBrush x:Key="ListBoxBackgroundBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="ListBoxBorderBrush" Color="#6D3F5B" />
+
+    <SolidColorBrush x:Key="ListBoxDisabledBackgroundBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="ListBoxDisabledBorderBrush" Color="#6D3F5B" />
+
+    <SolidColorBrush x:Key="ListBoxItemBackgroundBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="ListBoxItemBorderBrush" Color="#6D3F5B" />
+    <SolidColorBrush x:Key="ListBoxItemForegroundBrush" Color="#C7D0CC" />
+    
+    <SolidColorBrush x:Key="ListBoxItemDisabledBackgroundBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="ListBoxItemDisabledBorderBrush" Color="#6D3F5B" />
+    <SolidColorBrush x:Key="ListBoxItemDisabledForegroundBrush" Color="#C7D0CC" />
+
+    <SolidColorBrush x:Key="ListBoxSelectedItemBackgroundBrush" Color="#993366" />
+    <SolidColorBrush x:Key="ListBoxSelectedItemBorderBrush" Color="#6D3F5B" />
+    <SolidColorBrush x:Key="ListBoxSelectedItemForegroundBrush" Color="#C7D0CC" />
+
+    <SolidColorBrush x:Key="ListBoxSelectedItemMouseOverBackgroundBrush" Color="#B3446C" />
+    <SolidColorBrush x:Key="ListBoxSelectedItemMouseOverBorderBrush" Color="#6D3F5B" />
+    <SolidColorBrush x:Key="ListBoxSelectedItemMouseOverForegroundBrush" Color="#C7D0CC" />
     <!--#endregion-->
 </ResourceDictionary>

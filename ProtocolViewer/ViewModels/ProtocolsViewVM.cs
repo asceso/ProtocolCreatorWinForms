@@ -16,6 +16,7 @@ namespace ProtocolViewer.ViewModels
         private readonly IUnityContainer container;
         private string selectedProtocolItem;
         private string cbListBoxSelectedItem;
+        private string cbListBoxTemplateItem;
         private TextBoxModel textBoxModel;
         private TextBlockModel textBlockModel;
         private DateModel dateModel;
@@ -47,9 +48,19 @@ namespace ProtocolViewer.ViewModels
             set
             {
                 SetProperty(ref cbListBoxSelectedItem, value);
+                CBListBoxTemplateItem = value;
             }
         }
         private bool CBListBoxSelectedItemHasValue() => CBListBoxSelectedItem != null;
+        public string CBListBoxTemplateItem
+        {
+            get => cbListBoxTemplateItem;
+            set
+            {
+                SetProperty(ref cbListBoxTemplateItem, value);
+            }
+        }
+        private bool CBListBoxTemplateItemHasValue() => CBListBoxTemplateItem != null;
         #endregion
         #region VisibilityBlocks
         public bool TextBoxItemVisibility => SelectedItemHasValue() && SelectedProtocolItem.Equals("TextBox");
@@ -101,9 +112,12 @@ namespace ProtocolViewer.ViewModels
             GenerateCodeCommand = new DelegateCommand(OnGenerateButtonClick);
             ResetCurrentModelCommand = new DelegateCommand(OnResetCurrentModel);
 
-            CBAddListBoxItem = new DelegateCommand(OnAddListBoxItemCB);
-            CBEditListBoxItem = new DelegateCommand(OnEditListBoxItemCB);
-            CBDeleteListBoxItem = new DelegateCommand(OnDeleteListBoxItemCB);
+            CBAddListBoxItem = new DelegateCommand(OnAddListBoxItemCB, () => CBListBoxTemplateItemHasValue())
+                .ObservesProperty(()=>CBListBoxTemplateItem);
+            CBEditListBoxItem = new DelegateCommand(OnEditListBoxItemCB, () => CBListBoxSelectedItemHasValue())
+                .ObservesProperty(()=> CBListBoxSelectedItem);
+            CBDeleteListBoxItem = new DelegateCommand(OnDeleteListBoxItemCB, () => CBListBoxSelectedItemHasValue())
+                .ObservesProperty(() => CBListBoxSelectedItem);
         }
         #endregion Ctor
         #region Methods
@@ -239,6 +253,30 @@ namespace ProtocolViewer.ViewModels
                         buffer += CreateXMLElement("EndBlock");
                     }
                     break;
+                case "ComboBox":
+                    {
+                        buffer += CreateXMLElement("StartBlock");
+                        buffer += CreateXMLElement("CreateType", SelectedProtocolItem);
+                        buffer += CreateXMLElement("Id", ComboBoxModel.ID);
+                        buffer += CreateXMLElement("Name", ComboBoxModel.Name, false);
+                        buffer += CreateXMLElement("MinWidth", ComboBoxModel.MinWidth, !CheckBoxModel.MinWidth.Equals(0));
+                        buffer += CreateXMLElement("IsEnabled", ComboBoxModel.IsEnabled);
+                        buffer += CreateXMLElement("IsVisible", ComboBoxModel.IsVisible);
+                        buffer += CreateXMLElement("IsLabelVisible", ComboBoxModel.IsLabelVisible);
+                        buffer += CreateXMLElement("IsTextEditable", ComboBoxModel.IsTextEditable);
+                        buffer += CreateXMLElement("IsConclusionTemplate", ComboBoxModel.IsConclusionTemplate);
+                        buffer += CreateXMLElement("IsSelectedFromNetrika", ComboBoxModel.IsSelectedFromNetrika);
+                        buffer += CreateXMLElement("IsUseNetrika", ComboBoxModel.IsUseNetrika);
+                        buffer += CreateXMLElement("Value", ComboBoxModel.Value);
+                        string tmpCollection = ComboBoxModel.Value;
+                        foreach (string item in ComboBoxModel.Values)
+                        {
+                            tmpCollection += $"|{item}";
+                        }
+                        buffer += CreateXMLElement("Values", tmpCollection);
+                        buffer += CreateXMLElement("EndBlock");
+                    }
+                    break;
             }
             return buffer;
         }
@@ -292,15 +330,18 @@ namespace ProtocolViewer.ViewModels
         #region ComboBox - ListBox items
         private void OnAddListBoxItemCB()
         {
-
+            ComboBoxModel.Values.Add(CBListBoxTemplateItem);
+            CBListBoxTemplateItem = null;
         }
         private void OnEditListBoxItemCB()
         {
-
+            var currentIndex = ComboBoxModel.Values.IndexOf(CBListBoxSelectedItem);
+            ComboBoxModel.Values[currentIndex] = CBListBoxTemplateItem;
+            CBListBoxSelectedItem = ComboBoxModel.Values[currentIndex];
         }
         private void OnDeleteListBoxItemCB()
         {
-
+            ComboBoxModel.Values.Remove(CBListBoxSelectedItem);
         }
         #endregion ComboBox - ListBox items
         #endregion Methods
