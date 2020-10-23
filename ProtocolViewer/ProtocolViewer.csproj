@@ -54,12 +54,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\GenericModel.cs" />
-    <Compile Include="Models\InheritModels\CheckBoxModel.cs" />
-    <Compile Include="Models\InheritModels\ComboBoxModel.cs" />
-    <Compile Include="Models\InheritModels\DateModel.cs" />
-    <Compile Include="Models\InheritModels\TextBlockModel.cs" />
-    <Compile Include="Models\InheritModels\TextBoxModel.cs" />
     <Compile Include="ProtocolViewerModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -74,7 +68,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ViewModels\ProtocolGeneratedViewVM.cs" />
     <Compile Include="ViewModels\ProtocolsViewVM.cs" />
+    <Compile Include="Views\ProtocolGeneratedView.xaml.cs">
+      <DependentUpon>ProtocolGeneratedView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProtocolsView.xaml.cs">
       <DependentUpon>ProtocolsView.xaml</DependentUpon>
     </Compile>
@@ -89,12 +87,24 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CommonMethods\CommonMethods.csproj">
+      <Project>{566c01c6-f6e5-46a5-8486-582adfba762e}</Project>
+      <Name>CommonMethods</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonModels\CommonModels.csproj">
+      <Project>{cd3d9acb-dcb4-4ca4-874d-297e1055677c}</Project>
+      <Name>CommonModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SettingsModule\SettingsModule.csproj">
       <Project>{69DB7E94-3BDD-409C-9544-E06107857581}</Project>
       <Name>SettingsModule</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ProtocolGeneratedView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ProtocolsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -146,7 +146,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>erase "$(TargetDir)\ProtocolViewer.dll" \Q
-erase "$(TargetDir)\ProtocolViewer.pdb" \Q</PostBuildEvent>
+    <PostBuildEvent>cd $(TargetDir)
+call $(TargetDir)\clean.bat</PostBuildEvent>
   </PropertyGroup>
 </Project>

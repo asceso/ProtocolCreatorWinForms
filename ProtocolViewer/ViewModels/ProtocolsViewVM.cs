@@ -1,11 +1,18 @@
-﻿using Prism.Commands;
+﻿using CommonMethods;
+using CommonModels.ProtocolElementsModels;
+using CommonModels.ProtocolElementsModels.InheritModels;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
-using ProtocolViewer.Models;
-using ProtocolViewer.Models.InheritModels;
 using ProtocolViewer.Views;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Windows.Input;
 using Unity;
+using static CommonModels.CommonEnums;
 
 namespace ProtocolViewer.ViewModels
 {
@@ -14,21 +21,40 @@ namespace ProtocolViewer.ViewModels
         #region Fields
         private readonly IRegionManager regionManager;
         private readonly IUnityContainer container;
+
         private string selectedProtocolItem;
+        private string selectedLevel;
+        private string selectedOrientation;
+
         private string cbListBoxSelectedItem;
         private string cbListBoxTemplateItem;
+
+        private string newElementName;
+        private int customSelectedIndex;
+
+        private string[] availableItems;
+        private string[] availableLevels;
+        private string[] availableOrientation;
+
         private TextBoxModel textBoxModel;
         private TextBlockModel textBlockModel;
         private DateModel dateModel;
         private CheckBoxModel checkBoxModel;
         private ComboBoxModel comboBoxModel;
-        public string[] AvailableItems => new string[]
-        {
-            "TextBox", "TextBlock", "Date", "CheckBox", "ComboBox"
-        };
+        private NumericModel numericModel;
+        private ObservableCollection<TreeItemModel> customModel;
+        private object CurrentModel;
+
+        public string[] AvailableItems { get => availableItems; set => SetProperty(ref availableItems, value); }
+        public string[] AvailableLevels { get => availableLevels; set => SetProperty(ref availableLevels, value); }
+        public string[] AvailableOrientation { get => availableOrientation; set => SetProperty(ref availableOrientation, value); }
+
         #endregion Fields
+
         #region Properties
+
         #region SelectedProtocolType
+
         public string SelectedProtocolItem
         {
             get => selectedProtocolItem;
@@ -39,9 +65,41 @@ namespace ProtocolViewer.ViewModels
                 CheckAllVisibility();
             }
         }
-        private bool SelectedItemHasValue() => SelectedProtocolItem != null;
+        private bool SelectedProtocolItemHasValue() => SelectedProtocolItem != null;
+
         #endregion SelectedProtocolType
+
+        #region SelectedLevel
+
+        public string SelectedLevel
+        {
+            get => selectedLevel;
+            set
+            {
+                SetProperty(ref selectedLevel, value);
+                RaisePropertyChanged(nameof(IsSelectedLevelRoot));
+            }
+        }
+        private bool SelectedLevelHasValue => SelectedLevel != null;
+
+        #endregion SelectedLevel
+
+        #region SelectedOrientation
+
+        public string SelectedOrientation
+        {
+            get => selectedOrientation;
+            set => SetProperty(ref selectedOrientation, value);
+        }
+
+        private bool SelectedOrientationHasValue => SelectedOrientation != null;
+
+        public bool IsSelectedLevelRoot { get => SelectedLevelHasValue && !SelectedLevel.Equals(AvailableLevels[0]); }
+
+        #endregion SelectedLevel
+
         #region SelectedComboBoxListItem
+
         public string CBListBoxSelectedItem 
         {
             get => cbListBoxSelectedItem;
@@ -51,23 +109,71 @@ namespace ProtocolViewer.ViewModels
                 CBListBoxTemplateItem = value;
             }
         }
-        private bool CBListBoxSelectedItemHasValue() => CBListBoxSelectedItem != null;
+        private bool CBListBoxSelectedItemHasValue => CBListBoxSelectedItem != null;
+
         public string CBListBoxTemplateItem
         {
             get => cbListBoxTemplateItem;
+            set => SetProperty(ref cbListBoxTemplateItem, value);
+        }
+        private bool CBListBoxTemplateItemHasValue => CBListBoxTemplateItem != null;
+
+        #endregion SelectedComboBoxListItem
+
+        #region SelectedCustomModel
+
+        #region index
+
+        public int CustomSelectedIndex
+        {
+            get => customSelectedIndex;
             set
             {
-                SetProperty(ref cbListBoxTemplateItem, value);
+                SetProperty(ref customSelectedIndex, value);
+                if (value.Equals(-1))
+                    return;
+                SelectedProtocolItem = CustomModel[CustomSelectedIndex].ModelType;
+                MapModel(CustomModel[CustomSelectedIndex], CurrentModel);
             }
         }
-        private bool CBListBoxTemplateItemHasValue() => CBListBoxTemplateItem != null;
-        #endregion
+
+        public bool CustomSelectedIndexHasValue => !CustomSelectedIndex.Equals(-1);
+
+        #endregion index
+
+        #region item
+
+        public TreeItemModel CustomModelSelectedItem => CustomSelectedIndexHasValue ? CustomModel[CustomSelectedIndex] : null;
+        private bool CustomModelSelectedItemHasValue => CustomModelSelectedItem != null;
+
+        #endregion item
+
+        #region Model
+
+        public bool CustomModelHasItems { get => CustomModel.Any(); }
+
+        #endregion Model
+
+        #region Model.NewElement
+        public string NewElementName 
+        { 
+            get => newElementName;
+            set => SetProperty(ref newElementName, value);
+        }
+        public bool NewElementNameHasValue => NewElementName != null;
+
+        #endregion Model.NewElement
+
+        #endregion SelectedCustomModel
+
         #region VisibilityBlocks
-        public bool TextBoxItemVisibility => SelectedItemHasValue() && SelectedProtocolItem.Equals("TextBox");
-        public bool TextBlockItemVisibility => SelectedItemHasValue() && SelectedProtocolItem.Equals("TextBlock");
-        public bool DateItemVisibility => SelectedItemHasValue() && SelectedProtocolItem.Equals("Date");
-        public bool CheckBoxItemVisibility => SelectedItemHasValue() && SelectedProtocolItem.Equals("CheckBox");
-        public bool ComboBoxItemVisibility => SelectedItemHasValue() && SelectedProtocolItem.Equals("ComboBox");
+
+        public bool TextBoxItemVisibility => SelectedProtocolItemHasValue() && SelectedProtocolItem.Equals("TextBox");
+        public bool TextBlockItemVisibility => SelectedProtocolItemHasValue() && SelectedProtocolItem.Equals("TextBlock");
+        public bool DateItemVisibility => SelectedProtocolItemHasValue() && SelectedProtocolItem.Equals("Date");
+        public bool CheckBoxItemVisibility => SelectedProtocolItemHasValue() && SelectedProtocolItem.Equals("CheckBox");
+        public bool ComboBoxItemVisibility => SelectedProtocolItemHasValue() && SelectedProtocolItem.Equals("ComboBox");
+        public bool NumericVisibility => SelectedProtocolItemHasValue() && SelectedProtocolItem.Equals("NumericBox");
 
         private void CheckAllVisibility()
         {
@@ -76,58 +182,131 @@ namespace ProtocolViewer.ViewModels
             RaisePropertyChanged(nameof(DateItemVisibility));
             RaisePropertyChanged(nameof(CheckBoxItemVisibility));
             RaisePropertyChanged(nameof(ComboBoxItemVisibility));
+            RaisePropertyChanged(nameof(NumericVisibility));
         }
+
         #endregion VisibilityBlocks
+
         #region Models
+
         public TextBoxModel TextBoxModel { get => textBoxModel; set => SetProperty(ref textBoxModel, value); }
         public TextBlockModel TextBlockModel { get => textBlockModel; set => SetProperty(ref textBlockModel, value); }
         public DateModel DateModel { get => dateModel; set => SetProperty(ref dateModel, value); }
         public CheckBoxModel CheckBoxModel { get => checkBoxModel; set => SetProperty(ref checkBoxModel, value); }
         public ComboBoxModel ComboBoxModel { get => comboBoxModel; set => SetProperty(ref comboBoxModel, value); }
+        public NumericModel NumericModel { get => numericModel; set => SetProperty(ref numericModel, value); }
+        public ObservableCollection<TreeItemModel> CustomModel { get => customModel; set => SetProperty(ref customModel, value); }
+
         #endregion models
-        #endregion
+
+        #region Header Collection
+
+        public string[] CustomModelHeaders
+        {
+            get
+            {
+                List<string> temp = new List<string>();
+                foreach (var item in CustomModel)
+                    temp.Add(item.GetHeader());
+                return temp.ToArray();
+            }
+        }
+
+        #endregion Header Collection
+
+        #endregion Properties
+
         #region Commands
+
         public ICommand OpenSettingsCommand { get; private set; }
+        public ICommand OpenGeneratingViewCommand { get; private set; }
         public ICommand NumericClickCommand { get; private set; }
         public ICommand GenerateCodeCommand { get; private set; }
         public ICommand ResetCurrentModelCommand { get; private set; }
         public ICommand CBAddListBoxItem { get; private set; }
         public ICommand CBEditListBoxItem { get; private set; }
         public ICommand CBDeleteListBoxItem { get; private set; }
+        public ICommand AddNewElementInCollection { get; private set; }
+        public ICommand DeleteSelectedCustomItemCommand { get; private set; }
+        public ICommand ClearCustomCollectionCommand { get; private set; }
+
         #endregion Commands
+
         #region Ctor
+
         public ProtocolsViewVM(IRegionManager regionManager, IUnityContainer container)
         {
             this.regionManager = regionManager;
             this.container = container;
+
+            AvailableItems = Enum.GetNames(typeof(ItemTypes));
+
+            AvailableLevels = Enum.GetNames(typeof(LevelDescriptionRus));
+            SelectedLevel = AvailableLevels
+                .FirstOrDefault(x => x.Equals(Enum.GetName(typeof(LevelDescriptionRus), LevelDescriptionRus.Корень)));
+
+            AvailableOrientation = Enum.GetNames(typeof(OrientationsRus));
+            SelectedOrientation = AvailableOrientation
+                .FirstOrDefault(x=> x.Equals(Enum.GetName(typeof(OrientationsRus), OrientationsRus.Вертикально)));
+
 
             TextBoxModel = new TextBoxModel();
             TextBlockModel = new TextBlockModel();
             DateModel = new DateModel();
             CheckBoxModel = new CheckBoxModel();
             ComboBoxModel = new ComboBoxModel();
-            
+            NumericModel = new NumericModel();
+
+            CustomModel = new ObservableCollection<TreeItemModel>();
+            CustomModel.CollectionChanged += CustomModelCollectionChanged;
+
             OpenSettingsCommand = new DelegateCommand(OnOpenSettings);
+            OpenGeneratingViewCommand = new DelegateCommand(OnOpenGeneratingView, () => CustomModelHasItems)
+                .ObservesProperty(() => CustomModelHasItems);
+
             NumericClickCommand = new DelegateCommand<string>(OnNumericButtonClick);
             GenerateCodeCommand = new DelegateCommand(OnGenerateButtonClick);
             ResetCurrentModelCommand = new DelegateCommand(OnResetCurrentModel);
 
-            CBAddListBoxItem = new DelegateCommand(OnAddListBoxItemCB, () => CBListBoxTemplateItemHasValue())
-                .ObservesProperty(()=>CBListBoxTemplateItem);
-            CBEditListBoxItem = new DelegateCommand(OnEditListBoxItemCB, () => CBListBoxSelectedItemHasValue())
-                .ObservesProperty(()=> CBListBoxSelectedItem);
-            CBDeleteListBoxItem = new DelegateCommand(OnDeleteListBoxItemCB, () => CBListBoxSelectedItemHasValue())
+            CBAddListBoxItem = new DelegateCommand(OnAddListBoxItemCB, () => CBListBoxTemplateItemHasValue)
+                .ObservesProperty(() => CBListBoxTemplateItem);
+            CBEditListBoxItem = new DelegateCommand(OnEditListBoxItemCB, () => CBListBoxSelectedItemHasValue)
                 .ObservesProperty(() => CBListBoxSelectedItem);
+            CBDeleteListBoxItem = new DelegateCommand(OnDeleteListBoxItemCB, () => CBListBoxSelectedItemHasValue)
+                .ObservesProperty(() => CBListBoxSelectedItem);
+
+            DeleteSelectedCustomItemCommand = new DelegateCommand(OnDeleteSelectedCustomItem, () => CustomModelHasItems)
+                .ObservesProperty(() => CustomSelectedIndexHasValue)
+                .ObservesProperty(() => CustomModelHasItems);
+            ClearCustomCollectionCommand = new DelegateCommand(()=> CustomModel.Clear(), () => CustomModelHasItems)
+                .ObservesProperty(() => CustomModelHasItems);
+
+            AddNewElementInCollection = new DelegateCommand(OnAddElemntInCollection);
         }
+
         #endregion Ctor
+
         #region Methods
-        #region GenericMethods
+
+        #region NavigationMethods
         private void OnOpenSettings()
         {
             NavigationParameters nav = new NavigationParameters();
             nav.Add("backUri", nameof(ProtocolsView));
             regionManager.RequestNavigate("MainRegion", "SettingsView",nav);
         }
+        private void OnOpenGeneratingView()
+        {
+            NavigationParameters nav = new NavigationParameters();
+            nav.Add("backUri", nameof(ProtocolsView));
+            nav.Add("model", CustomModel);
+            regionManager.RequestNavigate("MainRegion", "ProtocolGeneratedView", nav);
+        }
+
+        #endregion NavigationMethods
+
+        #region Model methods
+
         private void OnResetCurrentModel()
         {
             if (SelectedProtocolItem == null)
@@ -149,10 +328,102 @@ namespace ProtocolViewer.ViewModels
                 case "ComboBox":
                     ComboBoxModel = new ComboBoxModel();
                     break;
+                case "NumericBox":
+                    NumericModel = new NumericModel();
+                    break;
             }
         }
-        #endregion GenericMethods
+
+        private GenericModel GetModelType()
+        {
+            if (!SelectedProtocolItemHasValue())
+                return new GenericModel();
+            return SelectedProtocolItem switch
+            {
+                "TextBox" => TextBoxModel,
+                "TextBlock" => TextBlockModel,
+                "Date" => DateModel,
+                "CheckBox" => CheckBoxModel,
+                "ComboBox" => ComboBoxModel,
+                "NumericBox" => NumericModel,
+                _ => new GenericModel(),
+            };
+        }
+
+        private void MapModel(TreeItemModel source, object target)
+        {
+            if (target is TextBoxModel) { TextBoxModel = (TextBoxModel)source.Model; return; }
+            if (target is TextBlockModel) { TextBlockModel = (TextBlockModel)source.Model; return; }
+            if (target is DateModel) {DateModel = (DateModel)source.Model; return; }
+            if (target is CheckBoxModel){ CheckBoxModel = (CheckBoxModel)source.Model; return; }
+            if (target is ComboBoxModel){ ComboBoxModel = (ComboBoxModel)source.Model; return; }
+            if (target is NumericModel){ NumericModel = (NumericModel)source.Model; return; }
+        }
+        #endregion Model methods
+
+        #region Collection methods
+
+        private void OnAddElemntInCollection()
+        {
+            if (!SelectedProtocolItemHasValue())
+                return;
+
+            var model = GetModelType();
+
+            TreeItemModel item = new TreeItemModel()
+            {
+                Header = NewElementNameHasValue && !string.IsNullOrEmpty(NewElementName) ? NewElementName : "No name" ,
+                ModelType = SelectedProtocolItem,
+                Model = model
+            };
+
+            item.Level = Array.IndexOf(AvailableLevels, SelectedLevel);
+            item.Orientation = item.Level.Equals(0) ? Array.IndexOf(AvailableOrientation, SelectedOrientation) : 0;
+
+            CustomModel.Add(item);
+            CustomSelectedIndex = CustomModel.Count - 1;
+        }
+        private void OnDeleteSelectedCustomItem()
+        {
+            if (!CustomModelSelectedItemHasValue || !CustomSelectedIndexHasValue)
+                return;
+            CustomModel.RemoveAt(CustomSelectedIndex);
+        }
+
+        #region CollectionEvents
+
+        private void CustomModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    {
+                        RaisePropertyChanged(nameof(CustomModelHeaders));
+                        RaisePropertyChanged(nameof(CustomModelHasItems));
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    {
+                        CustomSelectedIndex = -1;
+                        RaisePropertyChanged(nameof(CustomModelHeaders));
+                        RaisePropertyChanged(nameof(CustomModelHasItems));
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    {
+                        RaisePropertyChanged(nameof(CustomModelHeaders));
+                        RaisePropertyChanged(nameof(CustomModelHasItems));
+                    }
+                    break;
+            }
+        }
+
+        #endregion CollectionEvents
+
+        #endregion Collection methods
+
         #region Numeric Boxes
+
         private void OnNumericButtonClick(object parameter)
         {
             if (SelectedProtocolItem == null)
@@ -165,28 +436,60 @@ namespace ProtocolViewer.ViewModels
                 KeysGeneric(0, 2000, CheckBoxModel, parameter);
             if (SelectedProtocolItem.Equals("ComboBox"))
                 KeysGeneric(0, 2000, ComboBoxModel, parameter);
+            if (SelectedProtocolItem.Equals("NumericBox"))
+                KeysGeneric(0, 2000, NumericModel, parameter);
+            if (SelectedProtocolItem.Equals("NumericBox"))
+                KeysGeneric(0, 300, NumericModel, parameter, "Value", 0.1f);
+            if (SelectedProtocolItem.Equals("NumericBox"))
+                KeysGeneric(0, 300, NumericModel, parameter, "Step", 0.1f);
         }
-        private void KeysGeneric(int minimum, int maximum, GenericModel model, object parameter, string key="MinWidth")
+        private void KeysGeneric(int minimum, int maximum, GenericModel model, object parameter, string key="MinWidth", float step=1)
         {
             if (key.Equals("Lines"))
             {
-                model.Lines += parameter.Equals("UP") ? 1 : -1;
+                model.Lines += parameter.Equals("UP") ? (int)step : (int)-step;
                 if (model.Lines <= minimum) model.Lines = minimum;
                 if (model.Lines >= maximum) model.Lines = maximum;
                 return;
             }
-            model.MinWidth += parameter.Equals("UP") ? 1 : -1;
-            if (model.MinWidth <= minimum) model.MinWidth = minimum;
-            if (model.MinWidth >= maximum) model.MinWidth = maximum;
+            if (key.Equals("MinWidth"))
+            {
+                if (parameter.Equals("UP")) model.MinWidth += (int)step;
+                if (parameter.Equals("DOWN")) model.MinWidth -= (int)step;
+                if (model.MinWidth <= minimum) model.MinWidth = minimum;
+                if (model.MinWidth >= maximum) model.MinWidth = maximum;
+                return;
+            }
+            if (key.Equals("Value") && (model is NumericModel))
+            {
+                if (parameter.Equals("UPValue")) (model as NumericModel).Value += step;
+                if (parameter.Equals("DOWNValue")) (model as NumericModel).Value -= step;
+                if ((model as NumericModel).Value <= minimum) (model as NumericModel).Value = minimum;
+                if ((model as NumericModel).Value >= maximum) (model as NumericModel).Value = maximum;
+                return;
+            }
+            if (key.Equals("Step") && (model is NumericModel))
+            {
+                if (parameter.Equals("UPStep")) (model as NumericModel).Step += step;
+                if (parameter.Equals("DOWNStep")) (model as NumericModel).Step -= step;
+                if ((model as NumericModel).Step <= minimum) (model as NumericModel).Step = minimum;
+                if ((model as NumericModel).Step >= maximum) (model as NumericModel).Step = maximum;
+                return;
+            }
             return;
         }
+
         #endregion Numeric Boxes
+
         #region GenerateCodeMethods
+
         private void OnGenerateButtonClick()
         {
             RaisePropertyChanged(nameof(PreviewResult));
         }
+
         public string PreviewResult { get => OnPreviewGenerate(); }
+
         private string OnPreviewGenerate()
         {
             if (SelectedProtocolItem == null)
@@ -194,143 +497,25 @@ namespace ProtocolViewer.ViewModels
             string buffer = string.Empty;
             switch (SelectedProtocolItem)
             {
-                case "TextBox":
-                    {
-                        buffer += CreateXMLElement("StartBlock");
-                        buffer += CreateXMLElement("CreateType", SelectedProtocolItem);
-                        buffer += CreateXMLElement("Id", TextBoxModel.ID);
-                        buffer += CreateXMLElement("Name", TextBoxModel.Name, false);
-                        buffer += CreateXMLElement("Value", TextBoxModel.Value);
-                        buffer += CreateXMLElement("IsEnabled", TextBoxModel.IsEnabled);
-                        buffer += CreateXMLElement("IsStretch", TextBoxModel.IsStretch);
-                        buffer += CreateXMLElement("IsVisible", TextBoxModel.IsVisible);
-                        buffer += CreateXMLElement("IsLabelVisible", TextBoxModel.IsLabelVisible);
-                        buffer += CreateXMLElement("IsBoldLabel", TextBoxModel.IsBoldLabel);
-                        buffer += CreateXMLElement("IsConclusion", TextBoxModel.IsConclusion);
-                        buffer += CreateXMLElement("Lines", TextBoxModel.Lines, !TextBoxModel.Lines.Equals(0));
-                        buffer += CreateXMLElement("EndBlock");
-                    }
-                    break;
-                case "TextBlock":
-                    {
-                        buffer += CreateXMLElement("StartBlock");
-                        buffer += CreateXMLElement("CreateType", SelectedProtocolItem);
-                        buffer += CreateXMLElement("Id", TextBlockModel.ID);
-                        buffer += CreateXMLElement("Name", TextBlockModel.Name, false);
-                        buffer += CreateXMLElement("Value", TextBlockModel.Value);
-                        buffer += CreateXMLElement("IsEnabled", TextBlockModel.IsEnabled);
-                        buffer += CreateXMLElement("IsStretch", TextBlockModel.IsStretch);
-                        buffer += CreateXMLElement("IsVisible", TextBlockModel.IsVisible);
-                        buffer += CreateXMLElement("IsBold", TextBlockModel.IsBold);
-                        buffer += CreateXMLElement("MinWidth", TextBlockModel.MinWidth, !TextBlockModel.MinWidth.Equals(0));
-                        buffer += CreateXMLElement("EndBlock");
-                    }
-                    break;
-                case "Date":
-                    {
-                        buffer += CreateXMLElement("StartBlock");
-                        buffer += CreateXMLElement("CreateType", SelectedProtocolItem);
-                        buffer += CreateXMLElement("Id", DateModel.ID);
-                        buffer += CreateXMLElement("Name", DateModel.Name, false);
-                        buffer += CreateXMLElement("IsEnabled", DateModel.IsEnabled);
-                        buffer += CreateXMLElement("IsVisible", DateModel.IsVisible);
-                        buffer += CreateXMLElement("IsLabelVisible", DateModel.IsLabelVisible);
-                        buffer += CreateXMLElement("EndBlock");
-                    }
-                    break;
-                case "CheckBox":
-                    {
-                        buffer += CreateXMLElement("StartBlock");
-                        buffer += CreateXMLElement("CreateType", SelectedProtocolItem);
-                        buffer += CreateXMLElement("Id", CheckBoxModel.ID);
-                        buffer += CreateXMLElement("Name", CheckBoxModel.Name, false);
-                        buffer += CreateXMLElement("TextTrue", CheckBoxModel.TextTrue);
-                        buffer += CreateXMLElement("TextFalse", CheckBoxModel.TextFalse);
-                        buffer += CreateXMLElement("IsEnabled", CheckBoxModel.IsEnabled);
-                        buffer += CreateXMLElement("IsVisible", CheckBoxModel.IsVisible);
-                        buffer += CreateXMLElement("IsLabelVisible", CheckBoxModel.IsLabelVisible);
-                        buffer += CreateXMLElement("MinWidth", CheckBoxModel.MinWidth, !CheckBoxModel.MinWidth.Equals(0));
-                        buffer += CreateXMLElement("EndBlock");
-                    }
-                    break;
-                case "ComboBox":
-                    {
-                        buffer += CreateXMLElement("StartBlock");
-                        buffer += CreateXMLElement("CreateType", SelectedProtocolItem);
-                        buffer += CreateXMLElement("Id", ComboBoxModel.ID);
-                        buffer += CreateXMLElement("Name", ComboBoxModel.Name, false);
-                        buffer += CreateXMLElement("MinWidth", ComboBoxModel.MinWidth, !CheckBoxModel.MinWidth.Equals(0));
-                        buffer += CreateXMLElement("IsEnabled", ComboBoxModel.IsEnabled);
-                        buffer += CreateXMLElement("IsVisible", ComboBoxModel.IsVisible);
-                        buffer += CreateXMLElement("IsLabelVisible", ComboBoxModel.IsLabelVisible);
-                        buffer += CreateXMLElement("IsTextEditable", ComboBoxModel.IsTextEditable);
-                        buffer += CreateXMLElement("IsConclusionTemplate", ComboBoxModel.IsConclusionTemplate);
-                        buffer += CreateXMLElement("IsSelectedFromNetrika", ComboBoxModel.IsSelectedFromNetrika);
-                        buffer += CreateXMLElement("IsUseNetrika", ComboBoxModel.IsUseNetrika);
-                        buffer += CreateXMLElement("Value", ComboBoxModel.Value);
-                        string tmpCollection = ComboBoxModel.Value;
-                        foreach (string item in ComboBoxModel.Values)
-                        {
-                            tmpCollection += $"|{item}";
-                        }
-                        buffer += CreateXMLElement("Values", tmpCollection);
-                        buffer += CreateXMLElement("EndBlock");
-                    }
-                    break;
+                case "TextBox" : { CurrentModel = TextBoxModel; buffer = GeneratingMethods.CreateTextBox(TextBoxModel); } break;
+                case "TextBlock": { CurrentModel = TextBlockModel; buffer = GeneratingMethods.CreateTextBlock(TextBlockModel); } break;
+                case "Date": { CurrentModel = DateModel; buffer = GeneratingMethods.CreateDateBlock(DateModel); } break;
+                case "CheckBox": { CurrentModel = CheckBoxModel; buffer = GeneratingMethods.CreateCheckBoxModel(CheckBoxModel); } break;
+                case "ComboBox": { CurrentModel = ComboBoxModel; buffer = GeneratingMethods.CreateComboBoxModel(ComboBoxModel); } break;
+                case "NumericBox": { CurrentModel = NumericModel; buffer = GeneratingMethods.CreateNumericModel(NumericModel); } break;
             }
             return buffer;
         }
-        private string CreateXMLElement(string key, object value=null, bool ifNullAddValue=true)
-        {
-            if (key.Equals("StartBlock"))
-                return "<";
-            if (key.Equals("EndBlock"))
-                return " />";
-            if (key.Equals("CreateType"))
-                return value + $" itemType=\"{value}\"";
 
-            string temp = string.Empty;
-            temp = $" {key}=\"";
-
-            if (value is bool)
-                return temp += value.ToString().ToLower();
-            if (value is string)
-            {
-                if (string.IsNullOrEmpty((string)value))
-                    if (ifNullAddValue)
-                        return temp += value.ToString() + "\"";
-                    else
-                        return string.Empty;
-                value = value.ToString().Replace("\r\n", "\\r\\n");
-                while (value.ToString().Contains("\""))
-                {
-                    value = value.ToString().Replace("\"", "'");
-                }
-                while (value.ToString().Contains(">"))
-                {
-                    value = value.ToString().Replace(">", "&#707;");
-                }
-                while (value.ToString().Contains("<"))
-                {
-                    value = value.ToString().Replace("<", "&#706;");
-                }
-                return temp += value + "\"";
-            }
-            if (value is int)
-            {
-                if (ifNullAddValue)
-                    return $" {key}=\"{value}\"";
-                else
-                    return string.Empty;
-            }
-
-            return "Ошибка";
-        }
         #endregion GenerateCodeMethods
+
         #region ComboBox - ListBox items
+
         private void OnAddListBoxItemCB()
         {
             ComboBoxModel.Values.Add(CBListBoxTemplateItem);
+            CBListBoxSelectedItem = ComboBoxModel.Values[ComboBoxModel.Values.Count - 1];
+            CBListBoxSelectedItem = null;
             CBListBoxTemplateItem = null;
         }
         private void OnEditListBoxItemCB()
@@ -343,7 +528,9 @@ namespace ProtocolViewer.ViewModels
         {
             ComboBoxModel.Values.Remove(CBListBoxSelectedItem);
         }
+
         #endregion ComboBox - ListBox items
+
         #endregion Methods
     }
 }

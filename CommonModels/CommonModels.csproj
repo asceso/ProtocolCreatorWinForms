@@ -56,6 +56,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonEnums.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -69,6 +70,14 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ProtocolElementsModels\GenericModel.cs" />
+    <Compile Include="ProtocolElementsModels\InheritModels\CheckBoxModel.cs" />
+    <Compile Include="ProtocolElementsModels\InheritModels\ComboBoxModel.cs" />
+    <Compile Include="ProtocolElementsModels\InheritModels\DateModel.cs" />
+    <Compile Include="ProtocolElementsModels\InheritModels\NumericModel.cs" />
+    <Compile Include="ProtocolElementsModels\InheritModels\TextBlockModel.cs" />
+    <Compile Include="ProtocolElementsModels\InheritModels\TextBoxModel.cs" />
+    <Compile Include="ProtocolElementsModels\InheritModels\TreeItemModel.cs" />
     <Compile Include="SettingsModel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

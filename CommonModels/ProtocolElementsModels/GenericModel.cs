@@ -1,6 +1,6 @@
 ﻿using Prism.Mvvm;
 
-namespace ProtocolViewer.Models
+namespace CommonModels.ProtocolElementsModels
 {
     public class GenericModel : BindableBase
     {

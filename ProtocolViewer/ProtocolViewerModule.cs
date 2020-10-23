@@ -23,11 +23,13 @@ namespace ProtocolViewer
         public void OnInitialized(IContainerProvider containerProvider)
         {
             container.RegisterType<object, ProtocolsView>(nameof(ProtocolsView));
+            container.RegisterType<object, ProtocolGeneratedView>(nameof(ProtocolGeneratedView));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             ViewModelLocationProvider.Register(typeof(ProtocolsView).ToString(), typeof(ProtocolsViewVM));
+            ViewModelLocationProvider.Register(typeof(ProtocolGeneratedView).ToString(), typeof(ProtocolGeneratedViewVM));
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace ProtocolViewer.Models.InheritModels
+namespace CommonModels.ProtocolElementsModels.InheritModels
 {
     public class ComboBoxModel : GenericModel
     {

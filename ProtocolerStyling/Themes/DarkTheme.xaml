@@ -9,6 +9,8 @@
         <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/TextBox.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/CheckBox.xaml"/>
         <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/ListBox.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/TreeView.xaml"/>
+        <ResourceDictionary Source="pack://application:,,,/ProtocolerStyling;component/Common/TabControl.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <!--#region Window-->
@@ -117,5 +119,21 @@
     <SolidColorBrush x:Key="ListBoxSelectedItemMouseOverBackgroundBrush" Color="#B3446C" />
     <SolidColorBrush x:Key="ListBoxSelectedItemMouseOverBorderBrush" Color="#6D3F5B" />
     <SolidColorBrush x:Key="ListBoxSelectedItemMouseOverForegroundBrush" Color="#C7D0CC" />
+    <!--#endregion-->
+    <!--#region ContextMenu -->
+    <SolidColorBrush x:Key="ContextMenuBackgroundBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="ContextMenuBorderBrush" Color="#6D3F5B" />
+    <SolidColorBrush x:Key="TreeViewBorderBrush" Color="#6D3F5B" />
+    <!--#endregion-->
+    <!--#region TabControl -->
+    <SolidColorBrush x:Key="TabControlBackgroundBrush" Color="#1C1C1C" />
+    <SolidColorBrush x:Key="TabControlBorderBrush" Color="#6D3F5B" />
+
+    <SolidColorBrush x:Key="TabItemBackgroundBrush" Color="#646B63" />
+    <SolidColorBrush x:Key="TabItemBorderBrush" Color="#6D3F5B" />
+    <SolidColorBrush x:Key="TabItemForegroundBrush" Color="#C7D0CC" />
+
+    <SolidColorBrush x:Key="TabItemSelectedBackgroundBrush" Color="#6D3F5B" />
+
     <!--#endregion-->
 </ResourceDictionary>
