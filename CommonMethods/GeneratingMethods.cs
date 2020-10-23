@@ -1,20 +1,19 @@
 ﻿using CommonModels.ProtocolElementsModels.InheritModels;
 using System;
-using static CommonModels.CommonEnums;
+using System.Windows.Controls;
 
 namespace CommonMethods
 {
     public class GeneratingMethods
     {
         #region enums
-        public static string[] XMLElementsNames { get; } = Enum.GetNames(typeof(XMLElements));
-        public enum XMLElements
+        private enum XMLElements
         {
             StartBlock, EndBlock, EndBlockNoBracket, CreateType,
             TextBox, TextBlock, Date, CheckBox, ComboBox, NumericBox,
             StackPanel, StackPanelStart, StackPanelEnd
         }
-        private static string[] orientations = Enum.GetNames(typeof(Orientations));
+        private static string[] orientations = Enum.GetNames(typeof(Orientation));
         #endregion enums
 
         /// <summary>
@@ -26,18 +25,18 @@ namespace CommonMethods
         /// <returns>Строка из XML тега</returns>
         private static string CreateXMLElement(string key, object value = null, bool ifNullAddValue = true, int level = 0)
         {
-            if (key.Equals(XMLElementsNames[(int)XMLElements.StartBlock]))
+            if (key.Equals(nameof(XMLElements.StartBlock)))
             {
                 string tmp = string.Empty;
                 for (int i = 0; i < (level + 1) * 2; i++)
                 { tmp += " "; }
                 return tmp + "<";
             }
-            if (key.Equals(XMLElementsNames[(int)XMLElements.EndBlock]))
+            if (key.Equals(nameof(XMLElements.EndBlock)))
                 return " />";
-            if (key.Equals(XMLElementsNames[(int)XMLElements.EndBlockNoBracket]))
+            if (key.Equals(nameof(XMLElements.EndBlockNoBracket)))
                 return " >";
-            if (key.Equals(XMLElementsNames[(int)XMLElements.CreateType]))
+            if (key.Equals(nameof(XMLElements.CreateType)))
                 return value + $" itemType=\"{value}\"";
 
             string temp = $" {key}=\"";
@@ -51,19 +50,9 @@ namespace CommonMethods
                         return temp += value.ToString() + "\"";
                     else
                         return string.Empty;
-                value = value.ToString().Replace("\r\n", "\\r\\n");
-                while (value.ToString().Contains("\""))
-                {
-                    value = value.ToString().Replace("\"", "'");
-                }
-                while (value.ToString().Contains(">"))
-                {
-                    value = value.ToString().Replace(">", "&#707;");
-                }
-                while (value.ToString().Contains("<"))
-                {
-                    value = value.ToString().Replace("<", "&#706;");
-                }
+
+                CheckInvalidSymbols(ref value);
+
                 return temp += value + "\"";
             }
             if (value is int)
@@ -87,11 +76,27 @@ namespace CommonMethods
             }
             return "Ошибка";
         }
+        private static void CheckInvalidSymbols(ref object value)
+        {
+            value = value.ToString().Replace("\r\n", "\\r\\n");
+            while (value.ToString().Contains("\""))
+            {
+                value = value.ToString().Replace("\"", "'");
+            }
+            while (value.ToString().Contains(">"))
+            {
+                value = value.ToString().Replace(">", "&#707;");
+            }
+            while (value.ToString().Contains("<"))
+            {
+                value = value.ToString().Replace("<", "&#706;");
+            }
+        }
         public static string CreateTextBox(TextBoxModel model, int level=0)
         {
             string buffer = string.Empty;
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.StartBlock], level: level);
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.CreateType], XMLElementsNames[(int)XMLElements.TextBox]);
+            buffer += CreateXMLElement(nameof(XMLElements.StartBlock), level: level);
+            buffer += CreateXMLElement(nameof(XMLElements.CreateType), nameof(XMLElements.TextBox));
             buffer += CreateXMLElement("Id", model.ID);
             buffer += CreateXMLElement("Name", model.Name, false);
             buffer += CreateXMLElement("Value", model.Value);
@@ -102,14 +107,14 @@ namespace CommonMethods
             buffer += CreateXMLElement("IsBoldLabel", model.IsBoldLabel);
             buffer += CreateXMLElement("IsConclusion", model.IsConclusion);
             buffer += CreateXMLElement("Lines", model.Lines, !model.Lines.Equals(0));
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.EndBlock]);
+            buffer += CreateXMLElement(nameof(XMLElements.EndBlock));
             return buffer;
         }
         public static string CreateTextBlock(TextBlockModel model, int level = 0)
         {
             string buffer = string.Empty;
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.StartBlock], level: level);
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.CreateType], XMLElementsNames[(int)XMLElements.TextBlock]);
+            buffer += CreateXMLElement(nameof(XMLElements.StartBlock), level: level);
+            buffer += CreateXMLElement(nameof(XMLElements.CreateType), nameof(XMLElements.TextBlock));
             buffer += CreateXMLElement("Id", model.ID);
             buffer += CreateXMLElement("Name", model.Name, false);
             buffer += CreateXMLElement("Value", model.Value);
@@ -118,27 +123,27 @@ namespace CommonMethods
             buffer += CreateXMLElement("IsVisible", model.IsVisible);
             buffer += CreateXMLElement("IsBold", model.IsBold);
             buffer += CreateXMLElement("MinWidth", model.MinWidth, !model.MinWidth.Equals(0));
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.EndBlock]);
+            buffer += CreateXMLElement(nameof(XMLElements.EndBlock));
             return buffer;
         }
         public static string CreateDateBlock(DateModel model, int level = 0)
         {
             string buffer = string.Empty;
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.StartBlock], level: level);
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.CreateType], XMLElementsNames[(int)XMLElements.Date]);
+            buffer += CreateXMLElement(nameof(XMLElements.StartBlock), level: level);
+            buffer += CreateXMLElement(nameof(XMLElements.CreateType), nameof(XMLElements.Date));
             buffer += CreateXMLElement("Id", model.ID);
             buffer += CreateXMLElement("Name", model.Name, false);
             buffer += CreateXMLElement("IsEnabled", model.IsEnabled);
             buffer += CreateXMLElement("IsVisible", model.IsVisible);
             buffer += CreateXMLElement("IsLabelVisible", model.IsLabelVisible);
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.EndBlock]);
+            buffer += CreateXMLElement(nameof(XMLElements.EndBlock));
             return buffer;
         }
         public static string CreateCheckBoxModel(CheckBoxModel model, int level = 0)
         {
             string buffer = string.Empty;
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.StartBlock], level: level);
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.CreateType], XMLElementsNames[(int)XMLElements.CheckBox]);
+            buffer += CreateXMLElement(nameof(XMLElements.StartBlock), level: level);
+            buffer += CreateXMLElement(nameof(XMLElements.CreateType), nameof(XMLElements.CheckBox));
             buffer += CreateXMLElement("Id", model.ID);
             buffer += CreateXMLElement("Name", model.Name, false);
             buffer += CreateXMLElement("TextTrue", model.TextTrue);
@@ -147,14 +152,14 @@ namespace CommonMethods
             buffer += CreateXMLElement("IsVisible", model.IsVisible);
             buffer += CreateXMLElement("IsLabelVisible", model.IsLabelVisible);
             buffer += CreateXMLElement("MinWidth", model.MinWidth, !model.MinWidth.Equals(0));
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.EndBlock]);
+            buffer += CreateXMLElement(nameof(XMLElements.EndBlock));
             return buffer;
         }
         public static string CreateComboBoxModel(ComboBoxModel model, int level = 0)
         {
             string buffer = string.Empty;
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.StartBlock], level: level);
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.CreateType], XMLElementsNames[(int)XMLElements.ComboBox]);
+            buffer += CreateXMLElement(nameof(XMLElements.StartBlock), level: level);
+            buffer += CreateXMLElement(nameof(XMLElements.CreateType), nameof(XMLElements.ComboBox));
             buffer += CreateXMLElement("Id", model.ID);
             buffer += CreateXMLElement("Name", model.Name, false);
             buffer += CreateXMLElement("MinWidth", model.MinWidth, !model.MinWidth.Equals(0));
@@ -171,15 +176,16 @@ namespace CommonMethods
             {
                 tmpCollection += $"|{item}";
             }
+            if (tmpCollection.StartsWith("|")) tmpCollection = tmpCollection.Remove(0, 1);
             buffer += CreateXMLElement("Values", tmpCollection);
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.EndBlock]);
+            buffer += CreateXMLElement(nameof(XMLElements.EndBlock));
             return buffer;
         }
         public static string CreateNumericModel(NumericModel model, int level = 0)
         {
             string buffer = string.Empty;
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.StartBlock], level: level);
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.CreateType], XMLElementsNames[(int)XMLElements.NumericBox]);
+            buffer += CreateXMLElement(nameof(XMLElements.StartBlock), level: level);
+            buffer += CreateXMLElement(nameof(XMLElements.CreateType), nameof(XMLElements.NumericBox));
             buffer += CreateXMLElement("Id", model.ID);
             buffer += CreateXMLElement("Name", model.Name, false);
             buffer += CreateXMLElement("IsEnabled", model.IsEnabled);
@@ -189,21 +195,21 @@ namespace CommonMethods
             buffer += CreateXMLElement("Step", model.Step);
             buffer += CreateXMLElement("FormatString", model.FormatString);
             buffer += CreateXMLElement("MinWidth", model.MinWidth, !model.MinWidth.Equals(0));
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.EndBlock]);
+            buffer += CreateXMLElement(nameof(XMLElements.EndBlock));
             return buffer;
         }
         public static string CreateStackPanelStart(int stackNumber, int orientation, int level)
         {
             string buffer = string.Empty;
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.StartBlock], level: level);
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.CreateType], XMLElementsNames[(int)XMLElements.StackPanel]);
-            buffer += CreateXMLElement("Id", $"Stack{stackNumber}");
+            buffer += CreateXMLElement(nameof(XMLElements.StartBlock), level: level);
+            buffer += CreateXMLElement(nameof(XMLElements.CreateType), nameof(XMLElements.StackPanel));
+            buffer += stackNumber.Equals(-1) ? CreateXMLElement("Id", $"StackHeader") : CreateXMLElement("Id", $"Stack{stackNumber}");
             buffer += CreateXMLElement("Name", string.Empty);
             buffer += CreateXMLElement("IsEnabled", true);
             buffer += CreateXMLElement("IsVisible", false);
             buffer += CreateXMLElement("IsLabelVisible", false);
             buffer += CreateXMLElement("Orientation", orientations[orientation]);
-            buffer += CreateXMLElement(XMLElementsNames[(int)XMLElements.EndBlockNoBracket]);
+            buffer += CreateXMLElement(nameof(XMLElements.EndBlockNoBracket));
             return buffer;
         }
         public static string CreateStackPanelEnd(int level)

@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace ProtocolViewer.Views
@@ -34,6 +35,12 @@ namespace ProtocolViewer.Views
                 var scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
                 scrollViewer.ScrollToBottom();
             }
+        }
+
+        private void ListBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key.Equals(Key.Escape))
+                (sender as ListBox).SelectedIndex = -1;
         }
     }
 }

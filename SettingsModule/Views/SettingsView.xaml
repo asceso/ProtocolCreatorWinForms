@@ -7,7 +7,6 @@
              xmlns:prism="http://prismlibrary.com/"
              x:Class="SettingsModule.Views.SettingsView"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True" >
     
     <Grid ShowGridLines="False">

@@ -15,6 +15,7 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="0,0,0,5"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
     </Style>
 
     <Style x:Key="TextBlockInStack" TargetType="TextBlock" BasedOn="{StaticResource MainTextBlock}">

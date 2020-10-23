@@ -17,11 +17,6 @@
             Корень, Первый, Второй, Третий, Четвертый, Пятый
         };
 
-        public enum Orientations
-        {
-            Horizontal, Vertical
-        }
-
         public enum OrientationsRus
         {
             Горизонтально, Вертикально

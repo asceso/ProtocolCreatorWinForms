@@ -4,7 +4,7 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Height="600" Width="800" WindowStartupLocation="CenterScreen" 
-        ResizeMode="NoResize"
+        ResizeMode="CanResize"
         WindowStyle="None" Style="{DynamicResource BaseWindowStyle}" Loaded="Window_Loaded">
     <WindowChrome.WindowChrome>
         <WindowChrome ResizeBorderThickness="2" CaptionHeight="0" GlassFrameThickness="4" />
@@ -43,10 +43,7 @@
         <Button Grid.Column="4" Grid.Row="1" Cursor="Hand" Style="{DynamicResource ShellButton}" Command="{Binding MinimizeApplicationCommand}">
             <Image Source="/ProtocolerWPF;component/Media/minimize.png"/>
         </Button>
-        
+
         <ContentControl Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="6" prism:RegionManager.RegionName="MainRegion"/>
-        
-        <!--<ContentControl Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="6" prism:RegionManager.RegionName="MainRegion"><Button Background="AliceBlue"/></ContentControl>-->
-        
     </Grid>
 </Window>

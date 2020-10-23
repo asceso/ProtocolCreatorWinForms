@@ -13,6 +13,7 @@ using System.Linq;
 using System.Windows.Input;
 using Unity;
 using static CommonModels.CommonEnums;
+using static CommonModels.ProtocolElementsModels.BasicEnabledModel;
 
 namespace ProtocolViewer.ViewModels
 {
@@ -32,22 +33,19 @@ namespace ProtocolViewer.ViewModels
         private string newElementName;
         private int customSelectedIndex;
 
-        private string[] availableItems;
-        private string[] availableLevels;
-        private string[] availableOrientation;
-
         private TextBoxModel textBoxModel;
         private TextBlockModel textBlockModel;
         private DateModel dateModel;
         private CheckBoxModel checkBoxModel;
         private ComboBoxModel comboBoxModel;
         private NumericModel numericModel;
+        private HeaderAndFooterModel headerAndFooterModel;
         private ObservableCollection<TreeItemModel> customModel;
         private object CurrentModel;
 
-        public string[] AvailableItems { get => availableItems; set => SetProperty(ref availableItems, value); }
-        public string[] AvailableLevels { get => availableLevels; set => SetProperty(ref availableLevels, value); }
-        public string[] AvailableOrientation { get => availableOrientation; set => SetProperty(ref availableOrientation, value); }
+        public string[] AvailableItems { get => Enum.GetNames(typeof(ItemTypes)); }
+        public string[] AvailableLevels { get => Enum.GetNames(typeof(LevelDescriptionRus)); }
+        public string[] AvailableOrientation { get => Enum.GetNames(typeof(OrientationsRus)); }
 
         #endregion Fields
 
@@ -130,10 +128,13 @@ namespace ProtocolViewer.ViewModels
             set
             {
                 SetProperty(ref customSelectedIndex, value);
-                if (value.Equals(-1))
+                if (customSelectedIndex.Equals(-1))
+                {
+                    OnResetCurrentModel();
                     return;
+                }
                 SelectedProtocolItem = CustomModel[CustomSelectedIndex].ModelType;
-                MapModel(CustomModel[CustomSelectedIndex], CurrentModel);
+                MapModel(CustomModel[CustomSelectedIndex].Model, GetModelType());
             }
         }
 
@@ -195,6 +196,7 @@ namespace ProtocolViewer.ViewModels
         public CheckBoxModel CheckBoxModel { get => checkBoxModel; set => SetProperty(ref checkBoxModel, value); }
         public ComboBoxModel ComboBoxModel { get => comboBoxModel; set => SetProperty(ref comboBoxModel, value); }
         public NumericModel NumericModel { get => numericModel; set => SetProperty(ref numericModel, value); }
+        public HeaderAndFooterModel HeaderAndFooterModel { get => headerAndFooterModel; set => SetProperty(ref headerAndFooterModel, value); }
         public ObservableCollection<TreeItemModel> CustomModel { get => customModel; set => SetProperty(ref customModel, value); }
 
         #endregion models
@@ -214,6 +216,8 @@ namespace ProtocolViewer.ViewModels
 
         #endregion Header Collection
 
+        public string[] AvailableStates { get => Enum.GetNames(typeof(EnabledState)); }
+
         #endregion Properties
 
         #region Commands
@@ -223,6 +227,8 @@ namespace ProtocolViewer.ViewModels
         public ICommand NumericClickCommand { get; private set; }
         public ICommand GenerateCodeCommand { get; private set; }
         public ICommand ResetCurrentModelCommand { get; private set; }
+        public ICommand ResetHeaderAndFooteModel { get; private set; }
+        public ICommand ResetProtocolCommand { get; private set; }
         public ICommand CBAddListBoxItem { get; private set; }
         public ICommand CBEditListBoxItem { get; private set; }
         public ICommand CBDeleteListBoxItem { get; private set; }
@@ -239,16 +245,10 @@ namespace ProtocolViewer.ViewModels
             this.regionManager = regionManager;
             this.container = container;
 
-            AvailableItems = Enum.GetNames(typeof(ItemTypes));
-
-            AvailableLevels = Enum.GetNames(typeof(LevelDescriptionRus));
             SelectedLevel = AvailableLevels
                 .FirstOrDefault(x => x.Equals(Enum.GetName(typeof(LevelDescriptionRus), LevelDescriptionRus.Корень)));
-
-            AvailableOrientation = Enum.GetNames(typeof(OrientationsRus));
             SelectedOrientation = AvailableOrientation
                 .FirstOrDefault(x=> x.Equals(Enum.GetName(typeof(OrientationsRus), OrientationsRus.Вертикально)));
-
 
             TextBoxModel = new TextBoxModel();
             TextBlockModel = new TextBlockModel();
@@ -256,6 +256,7 @@ namespace ProtocolViewer.ViewModels
             CheckBoxModel = new CheckBoxModel();
             ComboBoxModel = new ComboBoxModel();
             NumericModel = new NumericModel();
+            HeaderAndFooterModel = new HeaderAndFooterModel();
 
             CustomModel = new ObservableCollection<TreeItemModel>();
             CustomModel.CollectionChanged += CustomModelCollectionChanged;
@@ -266,7 +267,10 @@ namespace ProtocolViewer.ViewModels
 
             NumericClickCommand = new DelegateCommand<string>(OnNumericButtonClick);
             GenerateCodeCommand = new DelegateCommand(OnGenerateButtonClick);
+
             ResetCurrentModelCommand = new DelegateCommand(OnResetCurrentModel);
+            ResetHeaderAndFooteModel = new DelegateCommand(OnResetHeaderAndFooter);
+            ResetProtocolCommand = new DelegateCommand(OnResetProtocol);
 
             CBAddListBoxItem = new DelegateCommand(OnAddListBoxItemCB, () => CBListBoxTemplateItemHasValue)
                 .ObservesProperty(() => CBListBoxTemplateItem);
@@ -278,6 +282,7 @@ namespace ProtocolViewer.ViewModels
             DeleteSelectedCustomItemCommand = new DelegateCommand(OnDeleteSelectedCustomItem, () => CustomModelHasItems)
                 .ObservesProperty(() => CustomSelectedIndexHasValue)
                 .ObservesProperty(() => CustomModelHasItems);
+
             ClearCustomCollectionCommand = new DelegateCommand(()=> CustomModel.Clear(), () => CustomModelHasItems)
                 .ObservesProperty(() => CustomModelHasItems);
 
@@ -300,6 +305,7 @@ namespace ProtocolViewer.ViewModels
             NavigationParameters nav = new NavigationParameters();
             nav.Add("backUri", nameof(ProtocolsView));
             nav.Add("model", CustomModel);
+            nav.Add("header", HeaderAndFooterModel);
             regionManager.RequestNavigate("MainRegion", "ProtocolGeneratedView", nav);
         }
 
@@ -307,6 +313,8 @@ namespace ProtocolViewer.ViewModels
 
         #region Model methods
 
+        #region Reset methods
+        //todo: Спрашивать разрешение
         private void OnResetCurrentModel()
         {
             if (SelectedProtocolItem == null)
@@ -333,6 +341,25 @@ namespace ProtocolViewer.ViewModels
                     break;
             }
         }
+        //todo: Спрашивать разрешение
+        private void OnResetHeaderAndFooter()
+        {
+            HeaderAndFooterModel = new HeaderAndFooterModel();
+        }
+        //todo: Спрашивать разрешение
+        private void OnResetProtocol()
+        {
+            HeaderAndFooterModel = new HeaderAndFooterModel();
+            TextBoxModel = new TextBoxModel();
+            TextBlockModel = new TextBlockModel();
+            DateModel = new DateModel();
+            CheckBoxModel = new CheckBoxModel();
+            ComboBoxModel = new ComboBoxModel();
+            NumericModel = new NumericModel();
+            CustomModel.Clear();
+        }
+
+        #endregion Reset methods
 
         private GenericModel GetModelType()
         {
@@ -350,15 +377,16 @@ namespace ProtocolViewer.ViewModels
             };
         }
 
-        private void MapModel(TreeItemModel source, object target)
+        private void MapModel(object source, object target)
         {
-            if (target is TextBoxModel) { TextBoxModel = (TextBoxModel)source.Model; return; }
-            if (target is TextBlockModel) { TextBlockModel = (TextBlockModel)source.Model; return; }
-            if (target is DateModel) {DateModel = (DateModel)source.Model; return; }
-            if (target is CheckBoxModel){ CheckBoxModel = (CheckBoxModel)source.Model; return; }
-            if (target is ComboBoxModel){ ComboBoxModel = (ComboBoxModel)source.Model; return; }
-            if (target is NumericModel){ NumericModel = (NumericModel)source.Model; return; }
+            if (target is TextBoxModel) { TextBoxModel = (TextBoxModel)source; }
+            if (target is TextBlockModel) { TextBlockModel = (TextBlockModel)source; }
+            if (target is DateModel) { DateModel = (DateModel)source; }
+            if (target is CheckBoxModel) { CheckBoxModel = (CheckBoxModel)source; }
+            if (target is ComboBoxModel) { ComboBoxModel = (ComboBoxModel)source; }
+            if (target is NumericModel) { NumericModel = (NumericModel)source; }
         }
+
         #endregion Model methods
 
         #region Collection methods
@@ -381,7 +409,7 @@ namespace ProtocolViewer.ViewModels
             item.Orientation = item.Level.Equals(0) ? Array.IndexOf(AvailableOrientation, SelectedOrientation) : 0;
 
             CustomModel.Add(item);
-            CustomSelectedIndex = CustomModel.Count - 1;
+            CustomSelectedIndex = -1;
         }
         private void OnDeleteSelectedCustomItem()
         {
@@ -398,6 +426,7 @@ namespace ProtocolViewer.ViewModels
             {
                 case NotifyCollectionChangedAction.Add:
                     {
+                        OnResetCurrentModel();
                         RaisePropertyChanged(nameof(CustomModelHeaders));
                         RaisePropertyChanged(nameof(CustomModelHasItems));
                     }

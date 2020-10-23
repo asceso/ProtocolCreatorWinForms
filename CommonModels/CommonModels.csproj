@@ -71,6 +71,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ProtocolElementsModels\GenericModel.cs" />
+    <Compile Include="ProtocolElementsModels\BasicEnabledModel.cs" />
+    <Compile Include="ProtocolElementsModels\InheritModels\HeaderAndFooterModel.cs" />
     <Compile Include="ProtocolElementsModels\InheritModels\CheckBoxModel.cs" />
     <Compile Include="ProtocolElementsModels\InheritModels\ComboBoxModel.cs" />
     <Compile Include="ProtocolElementsModels\InheritModels\DateModel.cs" />
