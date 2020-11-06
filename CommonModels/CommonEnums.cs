@@ -9,17 +9,17 @@
 
         public enum LevelDescription
         {
-            Root, FirstLevel, SecondLevel, ThirdLevel, FourLevel, FiveLevel
+            Root, FirstLevel,
         };
 
         public enum LevelDescriptionRus
         {
-            Корень, Первый, Второй, Третий, Четвертый, Пятый
+            Корень, Первый, 
         };
 
         public enum OrientationsRus
         {
-            Горизонтально, Вертикально
+            Горизонтально,
         }
     }
 }

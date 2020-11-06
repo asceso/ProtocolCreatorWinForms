@@ -135,6 +135,7 @@ namespace ProtocolViewer.ViewModels
                 }
                 SelectedProtocolItem = CustomModel[CustomSelectedIndex].ModelType;
                 MapModel(CustomModel[CustomSelectedIndex].Model, GetModelType());
+                OnPreviewGenerate();
             }
         }
 
@@ -248,7 +249,7 @@ namespace ProtocolViewer.ViewModels
             SelectedLevel = AvailableLevels
                 .FirstOrDefault(x => x.Equals(Enum.GetName(typeof(LevelDescriptionRus), LevelDescriptionRus.Корень)));
             SelectedOrientation = AvailableOrientation
-                .FirstOrDefault(x=> x.Equals(Enum.GetName(typeof(OrientationsRus), OrientationsRus.Вертикально)));
+                .FirstOrDefault(x=> x.Equals(Enum.GetName(typeof(OrientationsRus), OrientationsRus.Горизонтально)));
 
             TextBoxModel = new TextBoxModel();
             TextBlockModel = new TextBlockModel();
@@ -340,6 +341,7 @@ namespace ProtocolViewer.ViewModels
                     NumericModel = new NumericModel();
                     break;
             }
+            OnPreviewGenerate();
         }
         //todo: Спрашивать разрешение
         private void OnResetHeaderAndFooter()
@@ -416,6 +418,7 @@ namespace ProtocolViewer.ViewModels
             if (!CustomModelSelectedItemHasValue || !CustomSelectedIndexHasValue)
                 return;
             CustomModel.RemoveAt(CustomSelectedIndex);
+            OnPreviewGenerate();
         }
 
         #region CollectionEvents

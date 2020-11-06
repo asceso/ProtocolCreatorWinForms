@@ -194,6 +194,7 @@ namespace CommonMethods
             buffer += CreateXMLElement("Value", model.Value);
             buffer += CreateXMLElement("Step", model.Step);
             buffer += CreateXMLElement("FormatString", model.FormatString);
+            buffer += CreateXMLElement("Unit", model.Unit);
             buffer += CreateXMLElement("MinWidth", model.MinWidth, !model.MinWidth.Equals(0));
             buffer += CreateXMLElement(nameof(XMLElements.EndBlock));
             return buffer;

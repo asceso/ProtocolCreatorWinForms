@@ -406,6 +406,8 @@
                                     <ComboBoxItem Content="F1"/>
                                     <ComboBoxItem Content="F2"/>
                                 </ComboBox>
+                                <TextBlock Text="Unit" Style="{DynamicResource TextBlockInStack}" HorizontalAlignment="Center"/>
+                                <TextBox Text="{Binding NumericModel.Unit, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource SimpleTextBox}"/>
 
                                 <!--#region CheckBoxes-->
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
